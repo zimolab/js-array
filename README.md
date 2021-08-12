@@ -1,4 +1,4 @@
-# 项目说明
+# 项目说明 [![](https://jitpack.io/v/zimolab/js-array.svg)](https://jitpack.io/#zimolab/js-array)
 一个将JavaScript中的Array对象映射为Kotlin（java）对象的库。该项目基于netscape.javascript.JSObject对象，映射了Javascript Array对象的大部分接口，
 适用于使用WebEngine与底层Javascript代码进行交互的情景。
 
@@ -61,7 +61,7 @@ JsArray类实现了JsArrayInterface接口，并实现了一些开箱可用的“
 
 之所以要预先定义这些类型的数组，一方面是因为这些类型基本涵盖了多数使用需求和场景，另一方面则是因为这些类型可以自动在Js与Java之间进行转换。
 关于这一点，可以参考JavaFx WebView文档中关于Java与JS之间类型映射的部分，比如[这里](https://openjfx.io/javadoc/11/javafx.web/javafx/scene/web/WebEngine.html) 。
-> ####Mapping JavaScript values to Java objects
+> #### Mapping JavaScript values to Java objects
 > JavaScript values are represented using the obvious Java classes: 
 > **null becomes Java null**; 
 > a **boolean becomes a java.lang.Boolean**; 
@@ -73,7 +73,7 @@ JsArray类实现了JsArrayInterface接口，并实现了一些开箱可用的“
 > (As a special case, if the JavaScript object is a JavaRuntimeObject as discussed in the next section, then the original Java object is extracted instead.) 
 > The JSObject class is a proxy that provides access to methods and properties of its underlying JavaScript object. The most commonly used JSObject methods are getMember (to read a named property), setMember (to set or define a property), and call (to call a function-valued property).
 
-> ####Mapping Java objects to JavaScript values
+> #### Mapping Java objects to JavaScript values
 > The arguments of the JSObject methods setMember and call pass Java objects to the JavaScript environment. 
 > This is **roughly the inverse of the JavaScript-to-Java mapping described above**:
 > **Java String, Number, or Boolean objects are converted to the obvious JavaScript values**.
@@ -101,7 +101,7 @@ JsArray类实现了JsArrayInterface接口，并实现了一些开箱可用的“
 ##### JsBooleanArray
 布尔型数组
 
-##### JsObjectArray
+##### JSObjectArray
 Javascript对象数组（即netscape.javascript.JSObject对象数组）
 
 ##### JsAnyArray
@@ -113,7 +113,28 @@ Javascript对象数组（即netscape.javascript.JSObject对象数组）
 ## 快速入门
 导入依赖
 ```
+// 1、在build.gradle中添加jitpack仓库地址
+// 1) groovy
+repositories {
+    maven { url 'https://jitpack.io' }
+}
+// 2) kotlin DSL
+repositories {
+    maven {
+        setUrl("https://jitpack.io")
+    }
+}
 
+// 2、添加依赖
+// 1) groovy
+dependencies {
+    implementation 'com.github.zimolab:js-array:v0.1.0-SNAPSHOT'
+}
+
+// 2) kotlin DSL
+dependencies {
+    implementation("com.github.zimolab:js-array:v0.1.0-SNAPSHOT")
+}
 ```
 
 1、创建对象（以JsIntArray为例）
@@ -198,4 +219,4 @@ jsIntArray.sort(object : UnTypedSortFunction{
 println("sorted: $jsIntArray")
 ```
 
-**注意：** 以上代码仅仅演示API的基本使用方法，不保证能够不经修改直接运行，实际可运行的例子在[**js-array-demo**]() 仓库中可以找到。
+**注意：** 以上代码仅仅演示API的基本使用方法，无法确保能够不经修改直接运行，实际可运行的例子在[**js-array-demo**](https://github.com/zimolab/js-array-demo) 仓库中可以找到。
