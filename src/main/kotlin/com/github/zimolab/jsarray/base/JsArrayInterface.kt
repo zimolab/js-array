@@ -9,6 +9,17 @@ interface JsArrayInterface<T> {
         fun isJsArray(jsObject: JSObject): Boolean {
             return jsObject.eval(CHECK_IS_JS_ARRAY.format("this")) == true
         }
+
+        fun isJsArray(obj: Any): Boolean {
+            return if (obj is JSObject) {
+                isJsArray(jsObject = obj)
+            } else {
+                false
+            }
+        }
+
+        fun isArray(jsObject: JSObject) = isJsArray(jsObject = jsObject)
+        fun isArray(obj: Any) = isJsArray(obj = obj)
     }
 
     val length: Int
