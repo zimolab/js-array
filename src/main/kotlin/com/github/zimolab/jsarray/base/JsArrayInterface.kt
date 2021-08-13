@@ -48,7 +48,9 @@ interface JsArrayInterface<T> {
     fun map(callback: JsArrayIteratorCallback<T?, T?>): JsArrayInterface<T>
     fun every(callback: JsArrayIteratorCallback<T?, Boolean>): Boolean
     fun some(callback: JsArrayIteratorCallback<T?, Boolean>): Boolean
-    fun <R> reduce(callback: JsArrayIteratorCallback<T?, R?>): R?
-    fun <R> reduceRight(callback: JsArrayIteratorCallback<T?, R?>): R?
+    fun reduce(initialValue: T?, callback: JsArrayIteratorCallback<T?, T?>): T?
+    fun reduce(callback: JsArrayIteratorCallback<T?, T?>): T?
+    fun reduceRight(initialValue: T?, callback: JsArrayIteratorCallback<T?, T?>): T?
+    fun reduceRight(callback: JsArrayIteratorCallback<T?, T?>): T?
     fun sort(sortFunction: JsArraySortFunction<T?>? = null): JsArrayInterface<T>
 }
