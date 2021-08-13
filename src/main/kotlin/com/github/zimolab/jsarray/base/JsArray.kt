@@ -9,7 +9,8 @@ import netscape.javascript.JSObject
 class JsArray<T>
 private constructor(
     override val reference: JSObject,
-    private val undefineAsNull: Boolean = true) : JsArrayInterface<T> {
+    private val undefineAsNull: Boolean = true
+) : JsArrayInterface<T> {
 
     init {
         if (!JsArrayInterface.isJsArray(reference)) {
@@ -345,96 +346,92 @@ private constructor(
     }
 
     // 扩展API
-    inline fun every(crossinline callback: TypedCallback2<T, Boolean>) {
+    inline fun every(crossinline callback: TypedCallback2<T, Boolean>) =
         this.every(object : TypedIteratorCallback<T?, Boolean> {
             override fun call(currentValue: T?, index: Int, total: Boolean?, arr: Any?): Boolean {
                 return callback(index, currentValue)
             }
         })
-    }
 
-    inline fun some(crossinline callback: TypedCallback2<T, Boolean>) {
+
+    inline fun some(crossinline callback: TypedCallback2<T, Boolean>) =
         this.some(object : TypedIteratorCallback<T?, Boolean> {
             override fun call(currentValue: T?, index: Int, total: Boolean?, arr: Any?): Boolean {
                 return callback(index, currentValue)
             }
         })
-    }
 
-    inline fun forEach(crossinline callback: TypedCallback2<T, Unit>) {
+
+    inline fun forEach(crossinline callback: TypedCallback2<T, Unit>) =
         this.forEach(object : TypedIteratorCallback<T?, Unit> {
             override fun call(currentValue: T?, index: Int, total: Unit?, arr: Any?) {
                 callback(index, currentValue)
             }
         })
-    }
 
-    inline fun find(crossinline callback: TypedCallback2<T, Boolean>): T? {
-        return this.find(object : TypedIteratorCallback<T?, Boolean> {
+
+    inline fun find(crossinline callback: TypedCallback2<T, Boolean>) =
+        this.find(object : TypedIteratorCallback<T?, Boolean> {
             override fun call(currentValue: T?, index: Int, total: Boolean?, arr: Any?): Boolean {
                 return callback(index, currentValue)
             }
         })
-    }
 
-    inline fun findIndex(crossinline callback: TypedCallback2<T, Boolean>): Int {
-        return this.findIndex(object : TypedIteratorCallback<T?, Boolean> {
+
+    inline fun findIndex(crossinline callback: TypedCallback2<T, Boolean>) =
+        this.findIndex(object : TypedIteratorCallback<T?, Boolean> {
             override fun call(currentValue: T?, index: Int, total: Boolean?, arr: Any?): Boolean {
                 return callback(index, currentValue)
             }
         })
-    }
 
     inline fun forLoop(
         crossinline callback: TypedCallback2<T, Boolean>,
         startIndex: Int = 0,
         stopIndex: Int = -1,
         step: Int = 1
-    ) {
-        return this.forLoop(object : TypedIteratorCallback<T?, Boolean> {
+    ) =
+        this.forLoop(object : TypedIteratorCallback<T?, Boolean> {
             override fun call(currentValue: T?, index: Int, total: Boolean?, arr: Any?): Boolean {
                 return callback(index, currentValue)
             }
         }, startIndex, stopIndex, step)
-    }
 
-    inline fun filter(crossinline callback: TypedCallback2<T, Boolean>): JsArray<T> {
-        return this.filter(object : TypedIteratorCallback<T?, Boolean> {
+
+    inline fun filter(crossinline callback: TypedCallback2<T, Boolean>) =
+        this.filter(object : TypedIteratorCallback<T?, Boolean> {
             override fun call(currentValue: T?, index: Int, total: Boolean?, arr: Any?): Boolean {
                 return callback(index, currentValue)
             }
         })
-    }
 
-    inline fun map(crossinline callback: TypedCallback2<T, T>): JsArray<T> {
-        return this.map(object : TypedIteratorCallback<T?, T?> {
+    inline fun map(crossinline callback: TypedCallback2<T, T>) =
+        this.map(object : TypedIteratorCallback<T?, T?> {
             override fun call(currentValue: T?, index: Int, total: T?, arr: Any?): T? {
                 return callback(index, currentValue)
             }
         })
-    }
 
-    inline fun <R> reduce(crossinline callback: TypedCallback3<T, R>): R? {
-        return this.reduce(object : TypedIteratorCallback<T?, R?> {
+    inline fun <R> reduce(crossinline callback: TypedCallback3<T, R>) =
+        this.reduce(object : TypedIteratorCallback<T?, R?> {
             override fun call(currentValue: T?, index: Int, total: R?, arr: Any?): R? {
                 return callback(index, currentValue, total)
             }
         })
-    }
 
-    inline fun <R> reduceRight(crossinline callback: TypedCallback3<T, R>): R? {
-        return this.reduceRight(object : TypedIteratorCallback<T?, R?> {
+
+    inline fun <R> reduceRight(crossinline callback: TypedCallback3<T, R>) =
+        this.reduceRight(object : TypedIteratorCallback<T?, R?> {
             override fun call(currentValue: T?, index: Int, total: R?, arr: Any?): R? {
                 return callback(index, currentValue, total)
             }
         })
-    }
 
-    inline fun sort(crossinline callback: TypedCallback1<T>): JsArray<T> {
-        return this.sort(object : TypedSortFunction<T?>{
+    inline fun sort(crossinline callback: TypedCallback1<T>) =
+        this.sort(object : TypedSortFunction<T?> {
             override fun compare(a: T?, b: T?): Boolean {
                 return callback(a, b)
             }
         })
-    }
+
 }
