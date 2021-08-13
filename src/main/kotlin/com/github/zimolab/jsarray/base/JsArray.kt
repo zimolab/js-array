@@ -139,8 +139,10 @@ private constructor(
     }
 
     override operator fun get(index: Int): T? {
-        val result = reference.getSlot(index)
-        if (result == null || (undefineAsNull && result == UNDEFINED))
+        val result = execute("{let __tmp = this[$index];__tmp==$UNDEFINED?null:__tmp}")
+        if (result is Throwable)
+            throw JsArrayExecutionError("failed to get value at index=$index")
+        if (result == null)
             return null
         return result as T
     }
