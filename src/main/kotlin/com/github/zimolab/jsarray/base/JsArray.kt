@@ -226,26 +226,13 @@ private constructor(
         }
     }
 
-    override fun find(callback: JsArrayIteratorCallback<T?, Boolean>): T? {
-        val result = with("__find_cb__", callback) { method: String ->
-            execute("this.${JsAPIs.Array.FIND}((item, index, arr)=>{ return $method(item, index, null, arr); })")
-        }
-        if (result == null || (undefineAsNull && result == UNDEFINED))
-            return null
-        return result as T
-    }
-
-    override fun findIndex(callback: JsArrayIteratorCallback<T, Boolean>): Int {
-        val result = with("__find_index_cb__", callback) { method ->
-            execute("this.${JsAPIs.Array.FIND_INDEX}((item, index, arr)=>{ return $method(item, index, null, arr); })")
-        }
-        if (result is Int)
-            return result
-        throw JsArrayExecutionError("failed to invoke ${JsAPIs.Array.FIND_INDEX}() function.")
-    }
-
     override fun includes(element: T?, start: Int): Boolean {
-        return when (val result = invoke(JsAPIs.Array.INCLUDES, element, start)) {
+        val result = if (element == null) {
+            execute( "this.${JsAPIs.Array.INCLUDES}(null, $start) || this.${JsAPIs.Array.INCLUDES}($UNDEFINED, $start)")
+        } else {
+            invoke(JsAPIs.Array.INCLUDES, element, start)
+        }
+        return when (result) {
             is Boolean -> result
             else -> throw JsArrayExecutionError("failed to invoke ${JsAPIs.Array.INCLUDES}() function.")
         }
@@ -265,22 +252,51 @@ private constructor(
         }
     }
 
+    // BugFix #1
+    private fun undefine2Null(name: String): String {
+        return "${name}==$UNDEFINED?null:$name"
+    }
+
+    override fun find(callback: JsArrayIteratorCallback<T?, Boolean>): T? {
+        val result = with("__find_cb__", callback) { method: String ->
+            // BugFix #1
+            execute("this.${JsAPIs.Array.FIND}((item, index, arr)=>{ return $method(${undefine2Null("item")}, index, null, arr); })")
+        }
+        if (result == null || (undefineAsNull && result == UNDEFINED))
+            return null
+        return result as T
+    }
+
+    override fun findIndex(callback: JsArrayIteratorCallback<T, Boolean>): Int {
+        val result = with("__find_index_cb__", callback) { method ->
+            // BugFix #1
+            execute( "this.${JsAPIs.Array.FIND_INDEX}((item, index, arr)=>{ return $method(${undefine2Null("item")}, index, null, arr); })")
+        }
+        if (result is Int)
+            return result
+        throw JsArrayExecutionError("failed to invoke ${JsAPIs.Array.FIND_INDEX}() function.")
+    }
+
     override fun forLoop(callback: JsArrayIteratorCallback<T?, Boolean>, startIndex: Int, stopIndex: Int, step: Int) {
         this.with("__for_cb__", callback) { method ->
             val stop = if (stopIndex <= 0) length else stopIndex
-            execute("for(let i=${startIndex}; i < ${stop}; i = i + $step){if(!$method(this[i], i, null, this)) break}")
+            // BugFix #1
+            execute("for(let i=${startIndex}; i < ${stop}; i = i + $step){if(!$method(${undefine2Null("this[i]")}, i, null, this)) break}")
         }
     }
 
+
     override fun forEach(callback: JsArrayIteratorCallback<T?, Unit>) {
         this.with("__forEach_cb__", callback) { method ->
-            execute("this.${JsAPIs.Array.FOR_EACH}((item, index, arr)=>{ $method(item, index, null, arr); })")
+            // BugFix #1
+            execute("this.${JsAPIs.Array.FOR_EACH}((item, index, arr)=>{ $method(${undefine2Null("item")}, index, null, arr); })")
         }
     }
 
     override fun filter(callback: JsArrayIteratorCallback<T?, Boolean>): JsArray<T> {
         val result = this.with("__filter_cb__", callback) { method ->
-            execute("this.${JsAPIs.Array.FILTER}((item, index, arr)=>{ return $method(item, index, null, arr) })")
+            // BugFix #1
+            execute("this.${JsAPIs.Array.FILTER}((item, index, arr)=>{ return $method(${undefine2Null("item")}, index, null, arr) })")
         }
         if (result is JSObject)
             return JsArray(result)
@@ -289,7 +305,8 @@ private constructor(
 
     override fun map(callback: JsArrayIteratorCallback<T?, T?>): JsArray<T> {
         val result = this.with("__map_cb__", callback) { method ->
-            execute("this.${JsAPIs.Array.MAP}((item, index, arr)=>{ return $method(item, index, null, arr) })")
+            // BugFix #1
+            execute("this.${JsAPIs.Array.MAP}((item, index, arr)=>{ return $method(${undefine2Null("item")}, index, null, arr) })")
         }
         if (result is JSObject)
             return JsArray(result)
@@ -298,7 +315,8 @@ private constructor(
 
     override fun every(callback: JsArrayIteratorCallback<T?, Boolean>): Boolean {
         val result = this.with("__every_cb__", callback) { method ->
-            execute("this.${JsAPIs.Array.EVERY}((item, index, arr)=>{ return $method(item, index, null, arr) })")
+            // BugFix #1
+            execute("this.${JsAPIs.Array.EVERY}((item, index, arr)=>{ return $method(${undefine2Null("item")}, index, null, arr) })")
         }
         if (result is Boolean)
             return result
@@ -307,29 +325,52 @@ private constructor(
 
     override fun some(callback: JsArrayIteratorCallback<T?, Boolean>): Boolean {
         val result = this.with("__some_cb__", callback) { method ->
-            execute("this.${JsAPIs.Array.SOME}((item, index, arr)=>{ return $method(item, index, null, arr) })")
+            // BugFix #1
+            execute("this.${JsAPIs.Array.SOME}((item, index, arr)=>{ return $method(${undefine2Null("item")}, index, null, arr) })")
         }
         if (result is Boolean)
             return result
         throw JsArrayExecutionError("failed to invoke ${JsAPIs.Array.SOME}() function.")
     }
 
-    override fun <R> reduce(callback: JsArrayIteratorCallback<T?, R?>): R? {
+    override fun reduce(initialValue: T?, callback: JsArrayIteratorCallback<T?, T?>): T? {
         val result = this.with("__reduce_cb__", callback) { method ->
-            execute("this.${JsAPIs.Array.REDUCE}((total, item, index, arr)=>{ return $method(item, index, total, arr) })")
+            // BugFix #1
+            execute("this.${JsAPIs.Array.REDUCE}((total, item, index, arr)=>{ return $method(${undefine2Null("item")}, index, ${undefine2Null("total")}, arr) }, $initialValue)")
         }
         if (result == null || (undefineAsNull && result == UNDEFINED))
             return null
-        return result as R
+        return result as T
     }
 
-    override fun <R> reduceRight(callback: JsArrayIteratorCallback<T?, R?>): R? {
-        val result = this.with("__right_reduce_cb__", callback) { method ->
-            execute("this.${JsAPIs.Array.REDUCE_RIGHT}((total, item, index, arr)=>{ return $method(item, index, total, arr) })")
+    override fun reduce(callback: JsArrayIteratorCallback<T?, T?>): T? {
+        val result = this.with("__reduce_cb__", callback) { method ->
+            // BugFix #1
+            execute("this.${JsAPIs.Array.REDUCE}((total, item, index, arr)=>{ return $method(${undefine2Null("item")}, index, ${undefine2Null("total")}, arr) })")
         }
         if (result == null || (undefineAsNull && result == UNDEFINED))
             return null
-        return result as R
+        return result as T
+    }
+
+    override fun reduceRight(initialValue: T?, callback: JsArrayIteratorCallback<T?, T?>): T? {
+        val result = this.with("__right_reduce_cb__", callback) { method ->
+            // BugFix #1
+            execute("this.${JsAPIs.Array.REDUCE_RIGHT}((total, item, index, arr)=>{ return $method(${undefine2Null("item")}, index, ${undefine2Null("total")}, arr) }, $initialValue)")
+        }
+        if (result == null || (undefineAsNull && result == UNDEFINED))
+            return null
+        return result as T
+    }
+
+    override fun reduceRight(callback: JsArrayIteratorCallback<T?, T?>): T? {
+        val result = this.with("__right_reduce_cb__", callback) { method ->
+            // BugFix #1
+            execute("this.${JsAPIs.Array.REDUCE_RIGHT}((total, item, index, arr)=>{ return $method(${undefine2Null("item")}, index, ${undefine2Null("total")}, arr) })")
+        }
+        if (result == null || (undefineAsNull && result == UNDEFINED))
+            return null
+        return result as T
     }
 
     override fun sort(sortFunction: JsArraySortFunction<T?>?): JsArray<T> {
@@ -337,7 +378,8 @@ private constructor(
             invoke(JsAPIs.Array.SORT)
         else {
             this.with("__sort_cb__", sortFunction) { method ->
-                execute("this.${JsAPIs.Array.SORT}((a, b)=>{ return $method(a, b) })")
+                // BugFix #1
+                execute("this.${JsAPIs.Array.SORT}((a, b)=>{ return $method(${undefine2Null("a")}, ${undefine2Null("b")}) })")
             }
         }
         if (result is JSObject)
@@ -348,7 +390,7 @@ private constructor(
     // 扩展API
     inline fun every(crossinline callback: TypedCallback2<T, Boolean>) =
         this.every(object : TypedIteratorCallback<T?, Boolean> {
-            override fun call(currentValue: T?, index: Int, total: Boolean?, arr: Any?): Boolean {
+            override fun call(currentValue: T?, index: Int, total: T?, arr: Any?): Boolean {
                 return callback(index, currentValue)
             }
         })
@@ -356,7 +398,7 @@ private constructor(
 
     inline fun some(crossinline callback: TypedCallback2<T, Boolean>) =
         this.some(object : TypedIteratorCallback<T?, Boolean> {
-            override fun call(currentValue: T?, index: Int, total: Boolean?, arr: Any?): Boolean {
+            override fun call(currentValue: T?, index: Int, total: T?, arr: Any?): Boolean {
                 return callback(index, currentValue)
             }
         })
@@ -364,7 +406,7 @@ private constructor(
 
     inline fun forEach(crossinline callback: TypedCallback2<T, Unit>) =
         this.forEach(object : TypedIteratorCallback<T?, Unit> {
-            override fun call(currentValue: T?, index: Int, total: Unit?, arr: Any?) {
+            override fun call(currentValue: T?, index: Int, total: T?, arr: Any?) {
                 callback(index, currentValue)
             }
         })
@@ -372,7 +414,7 @@ private constructor(
 
     inline fun find(crossinline callback: TypedCallback2<T, Boolean>) =
         this.find(object : TypedIteratorCallback<T?, Boolean> {
-            override fun call(currentValue: T?, index: Int, total: Boolean?, arr: Any?): Boolean {
+            override fun call(currentValue: T?, index: Int, total: T?, arr: Any?): Boolean {
                 return callback(index, currentValue)
             }
         })
@@ -380,19 +422,19 @@ private constructor(
 
     inline fun findIndex(crossinline callback: TypedCallback2<T, Boolean>) =
         this.findIndex(object : TypedIteratorCallback<T?, Boolean> {
-            override fun call(currentValue: T?, index: Int, total: Boolean?, arr: Any?): Boolean {
+            override fun call(currentValue: T?, index: Int, total: T?, arr: Any?): Boolean {
                 return callback(index, currentValue)
             }
         })
 
     inline fun forLoop(
-        crossinline callback: TypedCallback2<T, Boolean>,
         startIndex: Int = 0,
         stopIndex: Int = -1,
-        step: Int = 1
+        step: Int = 1,
+        crossinline callback: TypedCallback2<T, Boolean>
     ) =
         this.forLoop(object : TypedIteratorCallback<T?, Boolean> {
-            override fun call(currentValue: T?, index: Int, total: Boolean?, arr: Any?): Boolean {
+            override fun call(currentValue: T?, index: Int, total: T?, arr: Any?): Boolean {
                 return callback(index, currentValue)
             }
         }, startIndex, stopIndex, step)
@@ -400,7 +442,7 @@ private constructor(
 
     inline fun filter(crossinline callback: TypedCallback2<T, Boolean>) =
         this.filter(object : TypedIteratorCallback<T?, Boolean> {
-            override fun call(currentValue: T?, index: Int, total: Boolean?, arr: Any?): Boolean {
+            override fun call(currentValue: T?, index: Int, total: T?, arr: Any?): Boolean {
                 return callback(index, currentValue)
             }
         })
@@ -412,17 +454,32 @@ private constructor(
             }
         })
 
-    inline fun <R> reduce(crossinline callback: TypedCallback3<T, R>) =
-        this.reduce(object : TypedIteratorCallback<T?, R?> {
-            override fun call(currentValue: T?, index: Int, total: R?, arr: Any?): R? {
+    inline fun reduce(initialValue: T?, crossinline callback: TypedCallback3<T, T>) =
+        this.reduce(initialValue, object : TypedIteratorCallback<T?, T?> {
+            override fun call(currentValue: T?, index: Int, total: T?, arr: Any?): T? {
+                return callback(index, currentValue, total)
+            }
+        })
+
+    inline fun reduce(crossinline callback: TypedCallback3<T, T>) =
+        this.reduce(object : TypedIteratorCallback<T?, T?> {
+            override fun call(currentValue: T?, index: Int, total: T?, arr: Any?): T? {
                 return callback(index, currentValue, total)
             }
         })
 
 
-    inline fun <R> reduceRight(crossinline callback: TypedCallback3<T, R>) =
-        this.reduceRight(object : TypedIteratorCallback<T?, R?> {
-            override fun call(currentValue: T?, index: Int, total: R?, arr: Any?): R? {
+
+    inline fun reduceRight(initialValue: T?, crossinline callback: TypedCallback3<T, T>) =
+        this.reduceRight(initialValue, object : TypedIteratorCallback<T?, T?> {
+            override fun call(currentValue: T?, index: Int, total: T?, arr: Any?): T? {
+                return callback(index, currentValue, total)
+            }
+        })
+
+    inline fun reduceRight(crossinline callback: TypedCallback3<T, T>) =
+        this.reduceRight(object : TypedIteratorCallback<T?, T?> {
+            override fun call(currentValue: T?, index: Int, total: T?, arr: Any?): T? {
                 return callback(index, currentValue, total)
             }
         })
@@ -433,5 +490,9 @@ private constructor(
                 return callback(a, b)
             }
         })
-
 }
+
+// BugFix记录
+//#1: 2021/8/13: 由于Array中某些方法（例如find()、findIndex()等）方法会遍历数组中的所有值，包括undefined
+// 而在js->java的类型映射中，undefined会被映射成一个字符串形式的"undefined"，这些值可能会作为java回调函数的参数使用，这对于非字符串类型的参数而言显然会引发类型错误
+// 为了避免这一错误，需要在js层面就将undefined值转换为null值，我们定义了一个undefined2Null()函数，用于生成将指定js变量的值从undefined转换为null的代码判断
