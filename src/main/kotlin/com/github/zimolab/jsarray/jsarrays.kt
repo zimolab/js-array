@@ -9,3 +9,6 @@ typealias JsBooleanArray = JsArray<Boolean?>
 typealias JsIntArray = JsArray<Int?>
 typealias JsDoubleArray = JsArray<Double?>
 typealias JsObjectArray = JsArray<JSObject?>
+typealias TypedCallback1<T> = (a: T?, b:T?)->Boolean
+typealias TypedCallback2<T, R> = (index: Int, value: T?)->R
+typealias TypedCallback3<T, R> = (index: Int, value: T?, total: R?)->R
