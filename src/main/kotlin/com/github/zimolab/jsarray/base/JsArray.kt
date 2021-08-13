@@ -44,7 +44,7 @@ private constructor(
 
         fun newArray(env: WebEngine, initialSize: Int = 0): JSObject? {
             val result = env.execute("new Array($initialSize)")
-            return if (result is JSObject && JsArrayInterface.isJsArray(result))
+            return if (result is JSObject && JsArrayInterface.isJsArray(jsObject = result))
                 result
             else
                 null
@@ -52,10 +52,40 @@ private constructor(
 
         fun newArray(env: JSObject, initialSize: Int = 0): JSObject? {
             val result = env.execute("new Array($initialSize)")
-            return if (result is JSObject && JsArrayInterface.isJsArray(result))
+            return if (result is JSObject && JsArrayInterface.isJsArray(jsObject = result))
                 result
             else
                 null
+        }
+
+        fun newJsStringArray(env: JSObject, initialSize: Int = 0): JsArray<String?>? {
+            val raw = newArray(env, initialSize) ?: return null
+            return stringArrayOf(raw)
+        }
+
+        fun newJsIntArray(env: JSObject, initialSize: Int = 0): JsArray<Int?>? {
+            val raw = newArray(env, initialSize) ?: return null
+            return intArrayOf(raw)
+        }
+
+        fun newJsDoubleArray(env: JSObject, initialSize: Int = 0): JsArray<Double?>? {
+            val raw = newArray(env, initialSize) ?: return null
+            return doubleArrayOf(raw)
+        }
+
+        fun newBooleanArray(env: JSObject, initialSize: Int = 0): JsArray<Boolean?>? {
+            val raw = newArray(env, initialSize) ?: return null
+            return booleanArrayOf(raw)
+        }
+
+        fun newJSObjectArray(env: JSObject, initialSize: Int = 0): JsArray<JSObject?>? {
+            val raw = newArray(env, initialSize) ?: return null
+            return jsObjectArrayOf(raw)
+        }
+
+        fun newJsAnyArray(env: JSObject, initialSize: Int = 0): JsArray<Any?>? {
+            val raw = newArray(env, initialSize) ?: return null
+            return anyArrayOf(raw)
         }
     }
 
