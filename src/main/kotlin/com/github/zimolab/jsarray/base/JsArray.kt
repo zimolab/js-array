@@ -500,6 +500,12 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
             }
         })
 
+    inline fun forEach(crossinline callback: UnTypedCallback2<Unit>) =
+        this.forEach(object : UnTypedIteratorCallback<Unit> {
+            override fun call(currentValue: Any?, index: Int, total: Any?, arr: Any?) {
+                callback(index to currentValue)
+            }
+        })
 
     inline fun find(crossinline callback: TypedCallback2<T, Boolean>) =
         this.find(object : TypedIteratorCallback<T?, Boolean> {
