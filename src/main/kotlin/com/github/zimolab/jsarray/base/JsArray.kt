@@ -129,7 +129,7 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
     private fun <R> with(
         nameInJs: String,
         callback: JsArraySortFunction<R>,
-        execution: (method: String) -> Any?
+        execution: (callbackName: String) -> Any?
     ): Any? {
         reference.inject(nameInJs, callback)
         val result = execution("this.${nameInJs}.compare")
@@ -434,12 +434,12 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
     }
 
     override fun reduceRight(callback: JsArrayIteratorCallback<T?, T?>): T? {
-        val result = this.with("__reduce_cb__", callback) { method ->
+        val result = this.with("__reduce_cb__", callback) { callback_ ->
             // BugFix #1
             execute(
                 "{" +
                         "let __tmp=this.$REDUCE_RIGHT((total, item, index, arr)=>{ " +
-                        "return $method(${undefine2Null("item")}, index, ${undefine2Null("total")}, arr) });" +
+                        "return $callback_(${undefine2Null("item")}, index, ${undefine2Null("total")}, arr) });" +
                         "__tmp==$UNDEFINED?null:__tmp;" +
                         "}"
             )
@@ -451,9 +451,9 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
         val result = if (sortFunction == null)
             invoke(SORT)
         else {
-            this.with("__sort_cb__", sortFunction) { method ->
+            this.with("__sort_cb__", sortFunction) { sortFunc_ ->
                 // BugFix #1
-                execute("this.$SORT((a, b)=>{ return $method(${undefine2Null("a")}, ${undefine2Null("b")}) });")
+                execute("this.$SORT((a, b)=>{ return $sortFunc_(${undefine2Null("a")}, ${undefine2Null("b")}) });")
             }
         }
         if (result is JSObject)
