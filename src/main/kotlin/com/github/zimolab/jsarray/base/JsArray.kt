@@ -461,7 +461,9 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
         throw JsArrayExecutionError("failed to invoke $SORT() function.")
     }
 
-    // 扩展API
+    // 扩展API（基于核心API）
+    // TypedXxx：限定类型的处理器
+    // UnTypedXxx: 任意类型（Any?）的处理器
     inline fun every(crossinline callback: TypedCallback2<T, Boolean>) =
         this.every(object : TypedIteratorCallback<T?, Boolean> {
             override fun call(currentValue: T?, index: Int, total: T?, arr: Any?): Boolean {
@@ -469,11 +471,24 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
             }
         })
 
+    inline fun every(crossinline callback: UnTypedCallback2<Boolean>) =
+        this.every(object : UnTypedIteratorCallback<Boolean> {
+            override fun call(currentValue: Any?, index: Int, total: Any?, arr: Any?): Boolean {
+                return callback(index to currentValue)
+            }
+        })
 
     inline fun some(crossinline callback: TypedCallback2<T, Boolean>) =
         this.some(object : TypedIteratorCallback<T?, Boolean> {
             override fun call(currentValue: T?, index: Int, total: T?, arr: Any?): Boolean {
                 return callback(index, currentValue)
+            }
+        })
+
+    inline fun some(crossinline callback: UnTypedCallback2<Boolean>) =
+        this.some(object : UnTypedIteratorCallback<Boolean> {
+            override fun call(currentValue: Any?, index: Int, total: Any?, arr: Any?): Boolean {
+                return callback(index to currentValue)
             }
         })
 
@@ -557,10 +572,17 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
             }
         })
 
-    inline fun sort(crossinline callback: TypedCallback1<T>) =
+    inline fun sort(crossinline callback: TypedSortComparator<T>) =
         this.sort(object : TypedSortFunction<T?> {
             override fun compare(a: T?, b: T?): Boolean {
                 return callback(a, b)
+            }
+        })
+
+    inline fun sort(crossinline callback: UnTypedSortComparator) =
+        this.sort(object : UnTypedSortFunction {
+            override fun compare(a: Any?, b: Any?): Boolean {
+                return callback(a to b)
             }
         })
 }
