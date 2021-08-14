@@ -2,7 +2,7 @@
 ##  v0.1.0-SNAPSHOT（2021/8/12）
 ### Bug Fixes
 无
-### Feature
+### Features
 - 第一个可用的测试版本。
 - 实现了对Javascript Array对象多数接口的映射
 - 确定了API的基本框架，但API尚未完全稳定，后续可能发生变化
@@ -80,7 +80,7 @@
 > 而在实际中，undefined的语义常常与null解决（尤其是当我们从java的视角来考虑问题时），因此，一个同样折衷的做法是，在js层面将可能传递到java的undefined的值预先就转换为null。
 > 在实际的代码中，我们定义了一个undefined2Null()函数来生成相关的代码片段。
 
-### Feature
+### Features
 - 增加了以下静态接口，更加方便使用
   - JsArrayInterface<T>.isJsArray(obj: Any)
   - JsArray<T>.newJsStringArray(env: JSObject, initialSize: Int = 0)
@@ -114,7 +114,7 @@ jsArray.forEach(object : TypedIteratorCallback<Int?, Unit> {
 
 // 现在可以这样简写了
 jsArray.forEach{ index, value->
-  println("jsArray[$index]=$currentValue")
+  println("jsArray[$index]=$value")
 }
 ```
 - 重载了reduce()和reduceRight()，现在可以设定初始值了:
