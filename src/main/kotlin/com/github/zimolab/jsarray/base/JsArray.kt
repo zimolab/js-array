@@ -514,11 +514,25 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
             }
         })
 
+    inline fun find(crossinline callback: UnTypedCallback2<Boolean>) =
+        this.find(object : UnTypedIteratorCallback<Boolean> {
+            override fun call(currentValue: Any?, index: Int, total: Any?, arr: Any?): Boolean {
+                return callback(index to currentValue)
+            }
+        })
+
 
     inline fun findIndex(crossinline callback: TypedCallback2<T, Boolean>) =
         this.findIndex(object : TypedIteratorCallback<T?, Boolean> {
             override fun call(currentValue: T?, index: Int, total: T?, arr: Any?): Boolean {
                 return callback(index, currentValue)
+            }
+        })
+
+    inline fun findIndex(crossinline callback: UnTypedCallback2<Boolean>) =
+        this.findIndex(object : UnTypedIteratorCallback<Boolean> {
+            override fun call(currentValue: Any?, index: Int, total: Any?, arr: Any?): Boolean {
+                return callback(index to currentValue)
             }
         })
 
