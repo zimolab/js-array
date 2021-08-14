@@ -548,6 +548,18 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
             }
         }, startIndex, stopIndex, step)
 
+    inline fun forLoop(
+        startIndex: Int = 0,
+        stopIndex: Int = -1,
+        step: Int = 1,
+        crossinline callback: UnTypedCallback2<Boolean>
+    ) =
+        this.forLoop(object : UnTypedIteratorCallback<Boolean> {
+            override fun call(currentValue: Any?, index: Int, total: Any?, arr: Any?): Boolean {
+                return callback(index to currentValue)
+            }
+        }, startIndex, stopIndex, step)
+
 
     inline fun filter(crossinline callback: TypedCallback2<T, Boolean>) =
         this.filter(object : TypedIteratorCallback<T?, Boolean> {
