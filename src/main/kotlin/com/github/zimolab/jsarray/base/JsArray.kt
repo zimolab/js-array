@@ -1,16 +1,37 @@
 package com.github.zimolab.jsarray.base
 
 import com.github.zimolab.jsarray.*
+import com.github.zimolab.jsarray.base.JsAPIs.Array.CONCAT
+import com.github.zimolab.jsarray.base.JsAPIs.Array.EVERY
+import com.github.zimolab.jsarray.base.JsAPIs.Array.FILL
+import com.github.zimolab.jsarray.base.JsAPIs.Array.FILTER
+import com.github.zimolab.jsarray.base.JsAPIs.Array.FIND
+import com.github.zimolab.jsarray.base.JsAPIs.Array.FIND_INDEX
+import com.github.zimolab.jsarray.base.JsAPIs.Array.FOR_EACH
+import com.github.zimolab.jsarray.base.JsAPIs.Array.INCLUDES
+import com.github.zimolab.jsarray.base.JsAPIs.Array.INDEX_OF
+import com.github.zimolab.jsarray.base.JsAPIs.Array.JOIN
+import com.github.zimolab.jsarray.base.JsAPIs.Array.LAST_INDEX_OF
+import com.github.zimolab.jsarray.base.JsAPIs.Array.LENGTH
+import com.github.zimolab.jsarray.base.JsAPIs.Array.MAP
+import com.github.zimolab.jsarray.base.JsAPIs.Array.POP
+import com.github.zimolab.jsarray.base.JsAPIs.Array.PUSH
+import com.github.zimolab.jsarray.base.JsAPIs.Array.REDUCE
+import com.github.zimolab.jsarray.base.JsAPIs.Array.REDUCE_RIGHT
+import com.github.zimolab.jsarray.base.JsAPIs.Array.REVERSE
+import com.github.zimolab.jsarray.base.JsAPIs.Array.SHIFT
+import com.github.zimolab.jsarray.base.JsAPIs.Array.SLICE
+import com.github.zimolab.jsarray.base.JsAPIs.Array.SOME
+import com.github.zimolab.jsarray.base.JsAPIs.Array.SORT
+import com.github.zimolab.jsarray.base.JsAPIs.Array.SPLICE
+import com.github.zimolab.jsarray.base.JsAPIs.Array.UNSHIFT
 import com.github.zimolab.jsarray.base.JsAPIs.UNDEFINED
 import javafx.scene.web.WebEngine
 import netscape.javascript.JSObject
 
 @Suppress("UNCHECKED_CAST")
 class JsArray<T>
-private constructor(
-    override val reference: JSObject,
-    private val undefineAsNull: Boolean = true
-) : JsArrayInterface<T> {
+private constructor(override val reference: JSObject) : JsArrayInterface<T> {
 
     init {
         if (!JsArrayInterface.isJsArray(reference)) {
@@ -20,27 +41,27 @@ private constructor(
 
     companion object {
         fun stringArrayOf(reference: JSObject): JsStringArray {
-            return JsArray(reference, false)
+            return JsArray(reference)
         }
 
         fun intArrayOf(reference: JSObject): JsIntArray {
-            return JsArray(reference, true)
+            return JsArray(reference)
         }
 
         fun doubleArrayOf(reference: JSObject): JsDoubleArray {
-            return JsArray(reference, true)
+            return JsArray(reference)
         }
 
         fun jsObjectArrayOf(reference: JSObject): JsObjectArray {
-            return JsArray(reference, true)
+            return JsArray(reference)
         }
 
         fun booleanArrayOf(reference: JSObject): JsBooleanArray {
-            return JsArray(reference, true)
+            return JsArray(reference)
         }
 
         fun anyArrayOf(reference: JSObject): JsAnyArray {
-            return JsArray(reference, false)
+            return JsArray(reference)
         }
 
         fun newArray(env: WebEngine, initialSize: Int = 0): JSObject? {
@@ -128,10 +149,10 @@ private constructor(
     }
 
     override val length: Int
-        get() = execute("this.${JsAPIs.Array.LENGTH}") as Int
+        get() = execute("this.$LENGTH") as Int
 
     override fun toString(): String {
-        return "[${join()}]"
+        return "[${join(separator = ",")}]"
     }
 
     override operator fun set(index: Int, value: T?) {
@@ -139,7 +160,7 @@ private constructor(
     }
 
     override operator fun get(index: Int): T? {
-        val result = execute("{let __tmp = this[$index];__tmp==$UNDEFINED?null:__tmp}")
+        val result = execute("{let __tmp = this[$index];__tmp==$UNDEFINED?null:__tmp;}")
         if (result is Throwable)
             throw JsArrayExecutionError("failed to get value at index=$index")
         if (result == null)
@@ -148,109 +169,134 @@ private constructor(
     }
 
     override fun concat(other: JsArrayInterface<T>): JsArrayInterface<T> {
-        val result = invoke(JsAPIs.Array.CONCAT, other.reference)
+        val result = invoke(CONCAT, other.reference)
         if (result is JSObject)
-            return JsArray(result, undefineAsNull)
-        throw JsArrayExecutionError("failed to invoke ${JsAPIs.Array.CONCAT}() function.")
+            return JsArray(result)
+        throw JsArrayExecutionError("failed to invoke $CONCAT() function.")
     }
 
     override fun join(separator: String): String {
-        val result = invoke(JsAPIs.Array.JOIN, separator)
+        val result = invoke(JOIN, separator)
         if (result is String)
             return result
-        throw JsArrayExecutionError("failed to invoke ${JsAPIs.Array.JOIN}() function.")
+        throw JsArrayExecutionError("failed to invoke $JOIN() function.")
     }
 
     override fun reverse(): JsArrayInterface<T> {
-        return if (invoke(JsAPIs.Array.REVERSE) is JSObject) {
+        return if (invoke(REVERSE) is JSObject) {
             this
         } else {
-            throw JsArrayExecutionError("failed to invoke ${JsAPIs.Array.REVERSE}() function.")
+            throw JsArrayExecutionError("failed to invoke $REVERSE() function.")
         }
     }
 
     override fun pop(): T? {
-        val result = invoke(JsAPIs.Array.POP)
-        if (result == null || (undefineAsNull && result == UNDEFINED))
+        val result = execute("{let __tmp = this.$POP();__tmp==$UNDEFINED?null:__tmp;}")
+        if (result is Throwable)
+            throw JsArrayExecutionError("failed to invoke $POP() function.")
+        if (result == null)
             return null
         return result as T
     }
 
     override fun push(vararg elements: T?): Int {
-        return when (val result = invoke(JsAPIs.Array.PUSH, *elements)) {
+        return when (val result = invoke(PUSH, *elements)) {
             is Int -> result
-            else -> throw JsArrayExecutionError("failed to invoke ${JsAPIs.Array.PUSH}() function.")
+            else -> throw JsArrayExecutionError("failed to invoke $PUSH() function.")
         }
     }
 
     override fun shift(): T? {
-        val result = invoke(JsAPIs.Array.SHIFT)
-        if (result == null || (undefineAsNull && result == UNDEFINED))
+        val result = execute("{let __tmp = this.$SHIFT();__tmp==$UNDEFINED?null:__tmp;}")
+        if (result is Throwable)
+            throw JsArrayExecutionError("failed to invoke $SHIFT() function.")
+        if (result == null)
             return null
         return result as T
     }
 
     override fun unshift(vararg elements: T?): Int {
-        return when (val result = invoke(JsAPIs.Array.UNSHIFT, *elements)) {
+        return when (val result = invoke(UNSHIFT, *elements)) {
             is Int -> result
-            else -> throw JsArrayExecutionError("failed to invoke ${JsAPIs.Array.UNSHIFT}() function.")
+            else -> throw JsArrayExecutionError("failed to invoke $UNSHIFT() function.")
         }
     }
 
     override fun slice(start: Int, end: Int?): JsArrayInterface<T> {
         val result = if (end == null) {
-            invoke(JsAPIs.Array.SLICE, start)
+            invoke(SLICE, start)
         } else {
-            invoke(JsAPIs.Array.SLICE, start, end)
+            invoke(SLICE, start, end)
         }
         if (result is JSObject)
             return JsArray(result)
-        throw JsArrayExecutionError("failed to invoke ${JsAPIs.Array.SLICE}() function.")
+        throw JsArrayExecutionError("failed to invoke $SLICE() function.")
     }
 
     override fun splice(index: Int, count: Int, vararg items: T?): JsArray<T> {
-        return when (val result = invoke(JsAPIs.Array.SPLICE, index, count, *items)) {
+        return when (val result = invoke(SPLICE, index, count, *items)) {
             is JSObject -> JsArray(result)
-            else -> throw JsArrayExecutionError("failed to invoke ${JsAPIs.Array.SPLICE}() function.")
+            else -> throw JsArrayExecutionError("failed to invoke $SPLICE() function.")
         }
     }
 
     override fun fill(value: T?, start: Int, end: Int?): JsArray<T> {
         val result = if (end == null) {
-            invoke(JsAPIs.Array.FILL, value, start)
+            invoke(FILL, value, start)
         } else {
-            invoke(JsAPIs.Array.FILL, value, start, end)
+            invoke(FILL, value, start, end)
         }
         return if (result is JSObject) {
             this
         } else {
-            throw JsArrayExecutionError("failed to invoke ${JsAPIs.Array.FILL}() function.")
+            throw JsArrayExecutionError("failed to invoke $FILL() function.")
         }
     }
 
     override fun includes(element: T?, start: Int): Boolean {
         val result = if (element == null) {
-            execute( "this.${JsAPIs.Array.INCLUDES}(null, $start) || this.${JsAPIs.Array.INCLUDES}($UNDEFINED, $start)")
+            execute("this.$INCLUDES(null, $start) || this.$INCLUDES($UNDEFINED, $start)")
         } else {
-            invoke(JsAPIs.Array.INCLUDES, element, start)
+            invoke(INCLUDES, element, start)
         }
         return when (result) {
             is Boolean -> result
-            else -> throw JsArrayExecutionError("failed to invoke ${JsAPIs.Array.INCLUDES}() function.")
+            else -> throw JsArrayExecutionError("failed to invoke $INCLUDES() function.")
         }
     }
 
     override fun indexOf(element: T?, start: Int): Int {
-        return when (val result = invoke(JsAPIs.Array.INDEX_OF, element, start)) {
+        val result = if (element == null) {
+            execute(
+                "{" +
+                        "let __tmp=this.$INDEX_OF(null, $start);" +
+                        "__tmp!=-1?__tmp:this.$INDEX_OF($UNDEFINED, $start);" +
+                        "}"
+            )
+        } else {
+            invoke(INDEX_OF, element, start)
+        }
+        return when (result) {
             is Int -> result
-            else -> throw JsArrayExecutionError("failed to invoke ${JsAPIs.Array.INDEX_OF}() function.")
+            else -> throw JsArrayExecutionError("failed to invoke $INDEX_OF() function.")
         }
     }
 
     override fun lastIndexOf(element: T?, start: Int): Int {
-        return when (val result = invoke(JsAPIs.Array.LAST_INDEX_OF, element, start)) {
+        val result = if (element == null) {
+            execute(
+                "" +
+                        "{" +
+                        "let __tmp=this.$LAST_INDEX_OF(null, $start);" +
+                        "__tmp!=-1?__tmp:this.$LAST_INDEX_OF($UNDEFINED, $start);" +
+                        "}"
+            )
+        } else {
+            invoke(LAST_INDEX_OF, element, start)
+        }
+        return when (result) {
             is Int -> result
-            else -> throw JsArrayExecutionError("failed to invoke ${JsAPIs.Array.LAST_INDEX_OF}() function.")
+            else -> throw JsArrayExecutionError("failed to invoke $LAST_INDEX_OF() function.")
         }
     }
 
@@ -260,133 +306,159 @@ private constructor(
     }
 
     override fun find(callback: JsArrayIteratorCallback<T?, Boolean>): T? {
-        val result = with("__find_cb__", callback) { method: String ->
+        val result = with("__find_cb__", callback) { callback_: String ->
             // BugFix #1
-            execute("this.${JsAPIs.Array.FIND}((item, index, arr)=>{ return $method(${undefine2Null("item")}, index, null, arr); })")
-        }
-        if (result == null || (undefineAsNull && result == UNDEFINED))
-            return null
+            execute(
+                "{" +
+                        "let __tmp = this.$FIND((item, index, arr)=>{ return $callback_(${undefine2Null("item")}, index, null, arr); });" +
+                        "__tmp==$UNDEFINED?null:__tmp;" +
+                        "}"
+            )
+        } ?: return null
         return result as T
     }
 
     override fun findIndex(callback: JsArrayIteratorCallback<T, Boolean>): Int {
-        val result = with("__find_index_cb__", callback) { method ->
+        val result = with("__find_index_cb__", callback) { callback_ ->
             // BugFix #1
-            execute( "this.${JsAPIs.Array.FIND_INDEX}((item, index, arr)=>{ return $method(${undefine2Null("item")}, index, null, arr); })")
+            execute("this.$FIND_INDEX((item, index, arr)=>{ return $callback_(${undefine2Null("item")}, index, null, arr); })")
         }
         if (result is Int)
             return result
-        throw JsArrayExecutionError("failed to invoke ${JsAPIs.Array.FIND_INDEX}() function.")
+        throw JsArrayExecutionError("failed to invoke $FIND_INDEX() function.")
     }
 
     override fun forLoop(callback: JsArrayIteratorCallback<T?, Boolean>, startIndex: Int, stopIndex: Int, step: Int) {
-        this.with("__for_cb__", callback) { method ->
+        this.with("__for_cb__", callback) { callback_ ->
             val stop = if (stopIndex <= 0) length else stopIndex
             // BugFix #1
-            execute("for(let i=${startIndex}; i < ${stop}; i = i + $step){if(!$method(${undefine2Null("this[i]")}, i, null, this)) break}")
+            execute(
+                "" +
+                        "for(let i=${startIndex}; i < ${stop}; i = i + $step){" +
+                        "   let _continue=$callback_(${undefine2Null("this[i]")}, i, null, this);" +
+                        "   if(!_continue) " +
+                        "       break;" +
+                        "}"
+            )
         }
     }
 
 
     override fun forEach(callback: JsArrayIteratorCallback<T?, Unit>) {
-        this.with("__forEach_cb__", callback) { method ->
+        this.with("__forEach_cb__", callback) { callback_ ->
             // BugFix #1
-            execute("this.${JsAPIs.Array.FOR_EACH}((item, index, arr)=>{ $method(${undefine2Null("item")}, index, null, arr); })")
+            execute("this.$FOR_EACH((item, index, arr)=>{ $callback_(${undefine2Null("item")}, index, null, arr); })")
         }
     }
 
     override fun filter(callback: JsArrayIteratorCallback<T?, Boolean>): JsArray<T> {
-        val result = this.with("__filter_cb__", callback) { method ->
+        val result = this.with("__filter_cb__", callback) { callback_ ->
             // BugFix #1
-            execute("this.${JsAPIs.Array.FILTER}((item, index, arr)=>{ return $method(${undefine2Null("item")}, index, null, arr) })")
+            execute("this.$FILTER((item, index, arr)=>{ return $callback_(${undefine2Null("item")}, index, null, arr); })")
         }
         if (result is JSObject)
             return JsArray(result)
-        throw JsArrayExecutionError("failed to invoke ${JsAPIs.Array.FILTER}() function.")
+        throw JsArrayExecutionError("failed to invoke $FILTER() function.")
     }
 
     override fun map(callback: JsArrayIteratorCallback<T?, T?>): JsArray<T> {
-        val result = this.with("__map_cb__", callback) { method ->
+        val result = this.with("__map_cb__", callback) { callback_ ->
             // BugFix #1
-            execute("this.${JsAPIs.Array.MAP}((item, index, arr)=>{ return $method(${undefine2Null("item")}, index, null, arr) })")
+            execute("this.$MAP((item, index, arr)=>{ return $callback_(${undefine2Null("item")}, index, null, arr); })")
         }
         if (result is JSObject)
             return JsArray(result)
-        throw JsArrayExecutionError("failed to invoke ${JsAPIs.Array.MAP}() function.")
+        throw JsArrayExecutionError("failed to invoke $MAP() function.")
     }
 
     override fun every(callback: JsArrayIteratorCallback<T?, Boolean>): Boolean {
-        val result = this.with("__every_cb__", callback) { method ->
+        val result = this.with("__every_cb__", callback) { callback_ ->
             // BugFix #1
-            execute("this.${JsAPIs.Array.EVERY}((item, index, arr)=>{ return $method(${undefine2Null("item")}, index, null, arr) })")
+            execute("this.$EVERY((item, index, arr)=>{ return $callback_(${undefine2Null("item")}, index, null, arr); })")
         }
         if (result is Boolean)
             return result
-        throw JsArrayExecutionError("failed to invoke ${JsAPIs.Array.EVERY}() function.")
+        throw JsArrayExecutionError("failed to invoke $EVERY() function.")
     }
 
     override fun some(callback: JsArrayIteratorCallback<T?, Boolean>): Boolean {
-        val result = this.with("__some_cb__", callback) { method ->
+        val result = this.with("__some_cb__", callback) { callback_ ->
             // BugFix #1
-            execute("this.${JsAPIs.Array.SOME}((item, index, arr)=>{ return $method(${undefine2Null("item")}, index, null, arr) })")
+            execute("this.$SOME((item, index, arr)=>{ return $callback_(${undefine2Null("item")}, index, null, arr); })")
         }
         if (result is Boolean)
             return result
-        throw JsArrayExecutionError("failed to invoke ${JsAPIs.Array.SOME}() function.")
+        throw JsArrayExecutionError("failed to invoke $SOME() function.")
     }
 
     override fun reduce(initialValue: T?, callback: JsArrayIteratorCallback<T?, T?>): T? {
-        val result = this.with("__reduce_cb__", callback) { method ->
+        val result = this.with("__reduce_cb__", callback) { callback_ ->
             // BugFix #1
-            execute("this.${JsAPIs.Array.REDUCE}((total, item, index, arr)=>{ return $method(${undefine2Null("item")}, index, ${undefine2Null("total")}, arr) }, $initialValue)")
-        }
-        if (result == null || (undefineAsNull && result == UNDEFINED))
-            return null
+            execute(
+                "{" +
+                        "let __tmp=this.$REDUCE((total, item, index, arr)=>{ " +
+                        "return $callback_(${undefine2Null("item")}, index, ${undefine2Null("total")}, arr) }, $initialValue);" +
+                        "__tmp==$UNDEFINED?null:__tmp;" +
+                        "}"
+            )
+        } ?: return null
         return result as T
     }
 
     override fun reduce(callback: JsArrayIteratorCallback<T?, T?>): T? {
-        val result = this.with("__reduce_cb__", callback) { method ->
+        val result = this.with("__reduce_cb__", callback) { callback_ ->
             // BugFix #1
-            execute("this.${JsAPIs.Array.REDUCE}((total, item, index, arr)=>{ return $method(${undefine2Null("item")}, index, ${undefine2Null("total")}, arr) })")
-        }
-        if (result == null || (undefineAsNull && result == UNDEFINED))
-            return null
+            execute(
+                "{" +
+                        "let __tmp=this.$REDUCE((total, item, index, arr)=>{ " +
+                        "return $callback_(${undefine2Null("item")}, index, ${undefine2Null("total")}, arr) });" +
+                        "__tmp==$UNDEFINED?null:__tmp;" +
+                        "}"
+            )
+        } ?: return null
         return result as T
     }
 
     override fun reduceRight(initialValue: T?, callback: JsArrayIteratorCallback<T?, T?>): T? {
-        val result = this.with("__right_reduce_cb__", callback) { method ->
+        val result = this.with("__reduce_cb__", callback) { callback_ ->
             // BugFix #1
-            execute("this.${JsAPIs.Array.REDUCE_RIGHT}((total, item, index, arr)=>{ return $method(${undefine2Null("item")}, index, ${undefine2Null("total")}, arr) }, $initialValue)")
-        }
-        if (result == null || (undefineAsNull && result == UNDEFINED))
-            return null
+            execute(
+                "{" +
+                        "let __tmp=this.${REDUCE_RIGHT}((total, item, index, arr)=>{ " +
+                        "return $callback_(${undefine2Null("item")}, index, ${undefine2Null("total")}, arr) }, $initialValue);" +
+                        "__tmp==$UNDEFINED?null:__tmp;" +
+                        "}"
+            )
+        } ?: return null
         return result as T
     }
 
     override fun reduceRight(callback: JsArrayIteratorCallback<T?, T?>): T? {
-        val result = this.with("__right_reduce_cb__", callback) { method ->
+        val result = this.with("__reduce_cb__", callback) { method ->
             // BugFix #1
-            execute("this.${JsAPIs.Array.REDUCE_RIGHT}((total, item, index, arr)=>{ return $method(${undefine2Null("item")}, index, ${undefine2Null("total")}, arr) })")
-        }
-        if (result == null || (undefineAsNull && result == UNDEFINED))
-            return null
+            execute(
+                "{" +
+                        "let __tmp=this.$REDUCE_RIGHT((total, item, index, arr)=>{ " +
+                        "return $method(${undefine2Null("item")}, index, ${undefine2Null("total")}, arr) });" +
+                        "__tmp==$UNDEFINED?null:__tmp;" +
+                        "}"
+            )
+        } ?: return null
         return result as T
     }
 
     override fun sort(sortFunction: JsArraySortFunction<T?>?): JsArray<T> {
         val result = if (sortFunction == null)
-            invoke(JsAPIs.Array.SORT)
+            invoke(SORT)
         else {
             this.with("__sort_cb__", sortFunction) { method ->
                 // BugFix #1
-                execute("this.${JsAPIs.Array.SORT}((a, b)=>{ return $method(${undefine2Null("a")}, ${undefine2Null("b")}) })")
+                execute("this.$SORT((a, b)=>{ return $method(${undefine2Null("a")}, ${undefine2Null("b")}) });")
             }
         }
         if (result is JSObject)
             return this
-        throw JsArrayExecutionError("failed to invoke ${JsAPIs.Array.SORT}() function.")
+        throw JsArrayExecutionError("failed to invoke $SORT() function.")
     }
 
     // 扩展API
@@ -469,7 +541,6 @@ private constructor(
                 return callback(index, currentValue, total)
             }
         })
-
 
 
     inline fun reduceRight(initialValue: T?, crossinline callback: TypedCallback3<T, T>) =
