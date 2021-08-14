@@ -568,6 +568,13 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
             }
         })
 
+    inline fun filter(crossinline callback: UnTypedCallback2<Boolean>) =
+        this.filter(object : UnTypedIteratorCallback<Boolean> {
+            override fun call(currentValue: Any?, index: Int, total: Any?, arr: Any?): Boolean {
+                return callback(index to currentValue)
+            }
+        })
+
     inline fun map(crossinline callback: TypedCallback2<T, T>) =
         this.map(object : TypedIteratorCallback<T?, T?> {
             override fun call(currentValue: T?, index: Int, total: T?, arr: Any?): T? {
