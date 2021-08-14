@@ -582,6 +582,13 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
             }
         })
 
+    inline fun map(crossinline callback: UnTypedCallback2<T>) =
+        this.map(object : UnTypedIteratorCallback<T?> {
+            override fun call(currentValue: Any?, index: Int, total: Any?, arr: Any?): T? {
+                return callback(index to currentValue)
+            }
+        })
+
     inline fun reduce(initialValue: T?, crossinline callback: TypedCallback3<T, T>) =
         this.reduce(initialValue, object : TypedIteratorCallback<T?, T?> {
             override fun call(currentValue: T?, index: Int, total: T?, arr: Any?): T? {
