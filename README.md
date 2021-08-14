@@ -176,6 +176,11 @@ jsIntArray.forEach(object : UnTypedIteratorCallback<Unit>{
         println("jsIntArray[$index] = $currentValue")
     }
 })
+// 3、使用lambda函数
+jsIntArray.forEach { index, value->
+    println("jsIntArray[$index] = $value")
+}
+
 // 其他迭代相关的函数，如map()、filter()、every()等以此类推。又比如，reduce()、reduceRight()的基本使用如下（简单的数值累加的例子）：
 jsIntArray.reduce(object : TypedIteratorCallback<Int?, Int>{
     override fun call(currentValue: Int?, index: Int, total: Int?, arr: Any?): Int {
