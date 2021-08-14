@@ -625,10 +625,24 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
             }
         })
 
+    inline fun reduceRight(initialValue: T?, crossinline callback: UnTypedCallback3<T>) =
+        this.reduce(initialValue, object : UnTypedIteratorCallback<T?> {
+            override fun call(currentValue: Any?, index: Int, total: Any?, arr: Any?): T? {
+                return callback(Triple(index, currentValue, total))
+            }
+        })
+
     inline fun reduceRight(crossinline callback: TypedCallback3<T, T>) =
         this.reduceRight(object : TypedIteratorCallback<T?, T?> {
             override fun call(currentValue: T?, index: Int, total: T?, arr: Any?): T? {
                 return callback(index, currentValue, total)
+            }
+        })
+
+    inline fun reduceRight(crossinline callback: UnTypedCallback3<T>) =
+        this.reduce(object : UnTypedIteratorCallback<T?> {
+            override fun call(currentValue: Any?, index: Int, total: Any?, arr: Any?): T? {
+                return callback(Triple(index, currentValue, total))
             }
         })
 
