@@ -318,7 +318,7 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
         return result as T
     }
 
-    override fun findIndex(callback: JsArrayIteratorCallback<T, Boolean>): Int {
+    override fun findIndex(callback: JsArrayIteratorCallback<T?, Boolean>): Int {
         val result = with("__find_index_cb__", callback) { callback_ ->
             // BugFix #1
             execute("this.$FIND_INDEX((item, index, arr)=>{ return $callback_(${undefine2Null("item")}, index, null, arr); })")
