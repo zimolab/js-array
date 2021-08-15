@@ -130,3 +130,17 @@ jsArray.forEach{ index, value->
   - (java) include(null) <=> (js) includes(null) && indexOf(null) ||  includes(undefined) 
   - (java) indexOf(null) <=> (js) {let __tmp=indexOf(null);__tmp!=-1? __tmp : indexOf(undefined)}
   - (java) lastIndexOf(null) <=> (js) {let __tmp=lastIndexOf(null);__tmp!=-1? __tmp : lastIndexOf(undefined)}
+
+##  v0.1.2-SNAPSHOT（2021/8/15）
+### Bug Fixes
+- 解决了一个小bug，将findIndex()函数参数泛型类型中忘记添加的?补上了
+
+> 之前：fun findIndex(callback: JsArrayIteratorCallback<T, Boolean>): Int
+> 之后：fun findIndex(callback: JsArrayIteratorCallback<T?, Boolean>): Int
+
+
+### Features
+- 无
+
+### Breaking Changes
+- findIndex()函数参数类型由**JsArrayIteratorCallback<T, Boolean>** 改为**JsArrayIteratorCallback<T?, Boolean>**, 这是编码上的一处遗漏，现在已解决。
