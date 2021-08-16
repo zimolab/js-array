@@ -302,6 +302,18 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
         }
     }
 
+    override fun includesAny(element: Any?, start: Int): Boolean {
+        val result = if (element == null) {
+            execute("this.$INCLUDES(null, $start) || this.$INCLUDES($UNDEFINED, $start)")
+        } else {
+            invoke(INCLUDES, element, start)
+        }
+        return when (result) {
+            is Boolean -> result
+            else -> throw JsArrayExecutionError("failed to invoke $INCLUDES() function.")
+        }
+    }
+
     override fun indexOf(element: T?, start: Int): Int {
         val result = if (element == null) {
             execute(
