@@ -179,6 +179,13 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
         throw JsArrayExecutionError("failed to invoke $CONCAT() function.")
     }
 
+    override fun concatAny(other: JsArrayInterface<T>): JsArrayInterface<Any?> {
+        val result = invoke(CONCAT, other.reference)
+        if (result is JSObject)
+            return JsArray(result)
+        throw JsArrayExecutionError("failed to invoke $CONCAT() function.")
+    }
+
     override fun join(separator: String): String {
         val result = invoke(JOIN, separator)
         if (result is String)
