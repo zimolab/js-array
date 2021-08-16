@@ -201,7 +201,13 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
         }
     }
 
-    override fun pop(): Any? {
+    override fun pop(): T? {
+        return popAny()?.let {
+            it as T
+        }
+    }
+
+    override fun popAny(): Any? {
         val result = execute("{let __tmp = this.$POP();__tmp==$UNDEFINED?null:__tmp;}")
         if (result is Throwable)
             throw JsArrayExecutionError("failed to invoke $POP() function.")

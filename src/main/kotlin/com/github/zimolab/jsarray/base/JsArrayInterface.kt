@@ -32,7 +32,8 @@ interface JsArrayInterface<T> {
     fun concatAny(other: JsArrayInterface<T>): JsArrayInterface<Any?>
     fun join(separator: String = ","): String
     fun reverse(): JsArrayInterface<T>
-    fun pop(): Any?
+    fun pop(): T?
+    fun popAny(): Any?
     fun push(vararg elements: T?): Int
     fun shift(): Any?
     fun unshift(vararg elements: T?): Int
