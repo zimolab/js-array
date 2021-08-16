@@ -159,13 +159,11 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
         reference.setSlot(index, value)
     }
 
-    override operator fun get(index: Int): T? {
+    override operator fun get(index: Int): Any? {
         val result = execute("{let __tmp = this[$index];__tmp==$UNDEFINED?null:__tmp;}")
         if (result is Throwable)
             throw JsArrayExecutionError("failed to get value at index=$index")
-        if (result == null)
-            return null
-        return result as T
+        return result
     }
 
     override fun concat(other: JsArrayInterface<T>): JsArrayInterface<T> {
