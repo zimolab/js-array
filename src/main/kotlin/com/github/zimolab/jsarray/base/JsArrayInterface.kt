@@ -39,7 +39,9 @@ interface JsArrayInterface<T> {
     fun shiftAny(): Any?
     fun unshift(vararg elements: T?): Int
     fun slice(start: Int, end: Int? = null): JsArrayInterface<T>
+    fun sliceAny(start: Int, end: Int? = null): JsArrayInterface<Any?>
     fun splice(index: Int, count: Int, vararg items: T?): JsArrayInterface<T>
+    fun spliceAny(index: Int, count: Int, vararg items: T?): JsArrayInterface<Any?>
     fun fill(value: T?, start: Int = 0, end: Int? = null): JsArrayInterface<T>
     fun find(callback: JsArrayIteratorCallback<T?, Boolean>): T?
     fun findIndex(callback: JsArrayIteratorCallback<T?, Boolean>): Int

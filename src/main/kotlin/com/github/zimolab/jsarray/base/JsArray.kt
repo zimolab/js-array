@@ -252,7 +252,25 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
         throw JsArrayExecutionError("failed to invoke $SLICE() function.")
     }
 
-    override fun splice(index: Int, count: Int, vararg items: T?): JsArray<T> {
+    override fun sliceAny(start: Int, end: Int?): JsArrayInterface<Any?> {
+        val result = if (end == null) {
+            invoke(SLICE, start)
+        } else {
+            invoke(SLICE, start, end)
+        }
+        if (result is JSObject)
+            return JsArray(result)
+        throw JsArrayExecutionError("failed to invoke $SLICE() function.")
+    }
+
+    override fun splice(index: Int, count: Int, vararg items: T?): JsArrayInterface<T> {
+        return when (val result = invoke(SPLICE, index, count, *items)) {
+            is JSObject -> JsArray(result)
+            else -> throw JsArrayExecutionError("failed to invoke $SPLICE() function.")
+        }
+    }
+
+    override fun spliceAny(index: Int, count: Int, vararg items: T?): JsArrayInterface<Any?> {
         return when (val result = invoke(SPLICE, index, count, *items)) {
             is JSObject -> JsArray(result)
             else -> throw JsArrayExecutionError("failed to invoke $SPLICE() function.")
