@@ -52,6 +52,7 @@ interface JsArrayInterface<T> {
     fun forLoop(callback: JsArrayIteratorCallback<T?, Boolean>, startIndex: Int = 0, stopIndex: Int = -1, step: Int = 1)
     fun forEach(callback: JsArrayIteratorCallback<T?, Unit>)
     fun filter(callback: JsArrayIteratorCallback<T?, Boolean>): JsArrayInterface<T>
+    fun filterAny(callback: UnTypedIteratorCallback<Boolean>): JsArrayInterface<Any?>
     fun map(callback: JsArrayIteratorCallback<T?, T?>): JsArrayInterface<T>
     fun every(callback: JsArrayIteratorCallback<T?, Boolean>): Boolean
     fun some(callback: JsArrayIteratorCallback<T?, Boolean>): Boolean

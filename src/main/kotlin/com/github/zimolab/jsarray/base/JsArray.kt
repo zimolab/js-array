@@ -401,7 +401,17 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
         }
     }
 
-    override fun filter(callback: JsArrayIteratorCallback<T?, Boolean>): JsArray<T> {
+    override fun filter(callback: JsArrayIteratorCallback<T?, Boolean>): JsArrayInterface<T> {
+        val result = this.with("__filter_cb__", callback) { callback_ ->
+            // BugFix #1
+            execute("this.$FILTER((item, index, arr)=>{ return $callback_(${undefine2Null("item")}, index, null, arr); })")
+        }
+        if (result is JSObject)
+            return JsArray(result)
+        throw JsArrayExecutionError("failed to invoke $FILTER() function.")
+    }
+
+    override fun filterAny(callback: UnTypedIteratorCallback<Boolean>): JsArrayInterface<Any?> {
         val result = this.with("__filter_cb__", callback) { callback_ ->
             // BugFix #1
             execute("this.$FILTER((item, index, arr)=>{ return $callback_(${undefine2Null("item")}, index, null, arr); })")
