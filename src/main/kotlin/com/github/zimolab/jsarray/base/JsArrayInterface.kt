@@ -62,6 +62,8 @@ interface JsArrayInterface<T> {
     fun reduce(callback: JsArrayIteratorCallback<T?, T?>): T?
     fun reduceAny(callback: JsArrayIteratorCallback<Any?, Any?>): Any?
     fun reduceRight(initialValue: T?, callback: JsArrayIteratorCallback<T?, T?>): T?
+    fun reduceRightAny(initialValue: Any?, callback: JsArrayIteratorCallback<Any?, Any?>): Any?
     fun reduceRight(callback: JsArrayIteratorCallback<T?, T?>): T?
+    fun reduceRightAny(callback: JsArrayIteratorCallback<Any?, Any?>): Any?
     fun sort(sortFunction: JsArraySortFunction<T?>? = null): JsArrayInterface<T>
 }

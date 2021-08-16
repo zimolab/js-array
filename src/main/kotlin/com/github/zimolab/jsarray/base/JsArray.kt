@@ -518,7 +518,7 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
     }
 
     override fun reduceRight(initialValue: T?, callback: JsArrayIteratorCallback<T?, T?>): T? {
-        val result = this.with("__reduce_cb__", callback) { callback_ ->
+        return this.with("__reduce_cb__", callback) { callback_ ->
             // BugFix #1
             execute(
                 "{" +
@@ -527,12 +527,26 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
                         "__tmp==$UNDEFINED?null:__tmp;" +
                         "}"
             )
-        } ?: return null
-        return result as T
+        }?.let {
+            it as T
+        }
+    }
+
+    override fun reduceRightAny(initialValue: Any?, callback: JsArrayIteratorCallback<Any?, Any?>): Any? {
+        return this.with("__reduce_cb__", callback) { callback_ ->
+            // BugFix #1
+            execute(
+                "{" +
+                        "let __tmp=this.${REDUCE_RIGHT}((total, item, index, arr)=>{ " +
+                        "return $callback_(${undefine2Null("item")}, index, ${undefine2Null("total")}, arr) }, $initialValue);" +
+                        "__tmp==$UNDEFINED?null:__tmp;" +
+                        "}"
+            )
+        }
     }
 
     override fun reduceRight(callback: JsArrayIteratorCallback<T?, T?>): T? {
-        val result = this.with("__reduce_cb__", callback) { callback_ ->
+        return this.with("__reduce_cb__", callback) { callback_ ->
             // BugFix #1
             execute(
                 "{" +
@@ -541,8 +555,22 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
                         "__tmp==$UNDEFINED?null:__tmp;" +
                         "}"
             )
-        } ?: return null
-        return result as T
+        }?.let {
+            it as T
+        }
+    }
+
+    override fun reduceRightAny(callback: JsArrayIteratorCallback<Any?, Any?>): Any? {
+        return this.with("__reduce_cb__", callback) { callback_ ->
+            // BugFix #1
+            execute(
+                "{" +
+                        "let __tmp=this.$REDUCE_RIGHT((total, item, index, arr)=>{ " +
+                        "return $callback_(${undefine2Null("item")}, index, ${undefine2Null("total")}, arr) });" +
+                        "__tmp==$UNDEFINED?null:__tmp;" +
+                        "}"
+            )
+        }
     }
 
     override fun sort(sortFunction: JsArraySortFunction<T?>?): JsArray<T> {
