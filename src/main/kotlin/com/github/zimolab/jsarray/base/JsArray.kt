@@ -202,13 +202,11 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
         }
     }
 
-    override fun shift(): T? {
+    override fun shift(): Any? {
         val result = execute("{let __tmp = this.$SHIFT();__tmp==$UNDEFINED?null:__tmp;}")
         if (result is Throwable)
             throw JsArrayExecutionError("failed to invoke $SHIFT() function.")
-        if (result == null)
-            return null
-        return result as T
+        return result
     }
 
     override fun unshift(vararg elements: T?): Int {

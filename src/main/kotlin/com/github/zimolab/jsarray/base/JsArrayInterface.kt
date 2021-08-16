@@ -32,7 +32,7 @@ interface JsArrayInterface<T> {
     fun reverse(): JsArrayInterface<T>
     fun pop(): Any?
     fun push(vararg elements: T?): Int
-    fun shift(): T?
+    fun shift(): Any?
     fun unshift(vararg elements: T?): Int
     fun slice(start: Int, end: Int? = null): JsArrayInterface<T>
     fun splice(index: Int, count: Int, vararg items: T?): JsArrayInterface<T>
