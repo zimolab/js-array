@@ -277,7 +277,7 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
         }
     }
 
-    override fun fill(value: T?, start: Int, end: Int?): JsArray<T> {
+    override fun fill(value: T?, start: Int, end: Int?): JsArrayInterface<T> {
         val result = if (end == null) {
             invoke(FILL, value, start)
         } else {
@@ -343,7 +343,7 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
     }
 
     override fun find(callback: JsArrayIteratorCallback<T?, Boolean>): T? {
-        val result = with("__find_cb__", callback) { callback_: String ->
+        return with("__find_cb__", callback) { callback_: String ->
             // BugFix #1
             execute(
                 "{" +
@@ -351,8 +351,21 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
                         "__tmp==$UNDEFINED?null:__tmp;" +
                         "}"
             )
-        } ?: return null
-        return result as T
+        }?.let {
+            it as T
+        }
+    }
+
+    override fun findAny(callback: UnTypedIteratorCallback<Boolean>): Any? {
+        return with("__find_cb__", callback) { callback_: String ->
+            // BugFix #1
+            execute(
+                "{" +
+                        "let __tmp = this.$FIND((item, index, arr)=>{ return $callback_(${undefine2Null("item")}, index, null, arr); });" +
+                        "__tmp==$UNDEFINED?null:__tmp;" +
+                        "}"
+            )
+        }
     }
 
     override fun findIndex(callback: JsArrayIteratorCallback<T?, Boolean>): Int {
