@@ -35,7 +35,8 @@ interface JsArrayInterface<T> {
     fun pop(): T?
     fun popAny(): Any?
     fun push(vararg elements: T?): Int
-    fun shift(): Any?
+    fun shift(): T?
+    fun shiftAny(): Any?
     fun unshift(vararg elements: T?): Int
     fun slice(start: Int, end: Int? = null): JsArrayInterface<T>
     fun splice(index: Int, count: Int, vararg items: T?): JsArrayInterface<T>
