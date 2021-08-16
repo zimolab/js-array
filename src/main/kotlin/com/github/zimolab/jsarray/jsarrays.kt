@@ -14,4 +14,4 @@ typealias UntypedSortComparator = (ab: Pair<Any?, Any?>)->Boolean
 typealias TypedCallback2<T, R> = (index: Int, value: T?)->R
 typealias UntypedCallback2<R> = (indexValue: Pair<Int, Any?>)->R
 typealias TypedCallback3<T, R> = (index: Int, value: T?, total: T?)->R
-typealias UnTypedCallback3<R> = (indexValueTotal: Triple<Int, Any?, Any?>)->R
+typealias UntypedCallback3<R> = (indexValueTotal: Triple<Int, Any?, Any?>)->R
