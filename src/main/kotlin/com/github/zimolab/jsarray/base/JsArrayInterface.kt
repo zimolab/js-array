@@ -27,24 +27,17 @@ interface JsArrayInterface<T> {
 
     operator fun set(index: Int, value: T?)
     operator fun get(index: Int): T?
-    fun getAny(index: Int): Any?
     fun concat(other: JsArrayInterface<T>): JsArrayInterface<T>
-    fun concatAny(other: JsArrayInterface<T>): JsArrayInterface<Any?>
     fun join(separator: String = ","): String
     fun reverse(): JsArrayInterface<T>
     fun pop(): T?
-    fun popAny(): Any?
     fun push(vararg elements: T?): Int
     fun shift(): T?
-    fun shiftAny(): Any?
     fun unshift(vararg elements: T?): Int
     fun slice(start: Int, end: Int? = null): JsArrayInterface<T>
-    fun sliceAny(start: Int, end: Int? = null): JsArrayInterface<Any?>
     fun splice(index: Int, count: Int, vararg items: T?): JsArrayInterface<T>
-    fun spliceAny(index: Int, count: Int, vararg items: T?): JsArrayInterface<Any?>
     fun fill(value: T?, start: Int = 0, end: Int? = null): JsArrayInterface<T>
     fun find(callback: JsArrayIteratorCallback<T?, Boolean>): T?
-    fun findAny(callback: UnTypedIteratorCallback<Boolean>): Any?
     fun findIndex(callback: JsArrayIteratorCallback<T?, Boolean>): Int
     fun includes(element: T?, start: Int = 0): Boolean
     fun indexOf(element: T?, start: Int = 0): Int
@@ -52,18 +45,28 @@ interface JsArrayInterface<T> {
     fun forLoop(callback: JsArrayIteratorCallback<T?, Boolean>, startIndex: Int = 0, stopIndex: Int = -1, step: Int = 1)
     fun forEach(callback: JsArrayIteratorCallback<T?, Unit>)
     fun filter(callback: JsArrayIteratorCallback<T?, Boolean>): JsArrayInterface<T>
-    fun filterAny(callback: UnTypedIteratorCallback<Boolean>): JsArrayInterface<Any?>
     fun map(callback: JsArrayIteratorCallback<T?, T?>): JsArrayInterface<T>
-    fun mapAny(callback: JsArrayIteratorCallback<Any?, Any?>): JsArrayInterface<Any?>
     fun every(callback: JsArrayIteratorCallback<T?, Boolean>): Boolean
     fun some(callback: JsArrayIteratorCallback<T?, Boolean>): Boolean
     fun reduce(initialValue: T?, callback: JsArrayIteratorCallback<T?, T?>): T?
-    fun reduceAny(initialValue: Any?, callback: JsArrayIteratorCallback<Any?, Any?>): Any?
     fun reduce(callback: JsArrayIteratorCallback<T?, T?>): T?
-    fun reduceAny(callback: JsArrayIteratorCallback<Any?, Any?>): Any?
     fun reduceRight(initialValue: T?, callback: JsArrayIteratorCallback<T?, T?>): T?
-    fun reduceRightAny(initialValue: Any?, callback: JsArrayIteratorCallback<Any?, Any?>): Any?
     fun reduceRight(callback: JsArrayIteratorCallback<T?, T?>): T?
-    fun reduceRightAny(callback: JsArrayIteratorCallback<Any?, Any?>): Any?
     fun sort(sortFunction: JsArraySortFunction<T?>? = null): JsArrayInterface<T>
+
+    // any版本的API
+    fun sortAny(sortFunction: JsArraySortFunction<Any?>? = null): JsArrayInterface<Any?>
+    fun reduceRightAny(callback: JsArrayIteratorCallback<Any?, Any?>): Any?
+    fun reduceRightAny(initialValue: Any?, callback: JsArrayIteratorCallback<Any?, Any?>): Any?
+    fun reduceAny(callback: JsArrayIteratorCallback<Any?, Any?>): Any?
+    fun reduceAny(initialValue: Any?, callback: JsArrayIteratorCallback<Any?, Any?>): Any?
+    fun mapAny(callback: JsArrayIteratorCallback<Any?, Any?>): JsArrayInterface<Any?>
+    fun filterAny(callback: UnTypedIteratorCallback<Boolean>): JsArrayInterface<Any?>
+    fun findAny(callback: UnTypedIteratorCallback<Boolean>): Any?
+    fun spliceAny(index: Int, count: Int, vararg items: T?): JsArrayInterface<Any?>
+    fun sliceAny(start: Int, end: Int? = null): JsArrayInterface<Any?>
+    fun shiftAny(): Any?
+    fun popAny(): Any?
+    fun concatAny(other: JsArrayInterface<T>): JsArrayInterface<Any?>
+    fun getAny(index: Int): Any?
 }

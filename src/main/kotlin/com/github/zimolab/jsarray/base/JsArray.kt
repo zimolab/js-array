@@ -573,7 +573,7 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
         }
     }
 
-    override fun sort(sortFunction: JsArraySortFunction<T?>?): JsArray<T> {
+    override fun sort(sortFunction: JsArraySortFunction<T?>?): JsArrayInterface<T> {
         val result = if (sortFunction == null)
             invoke(SORT)
         else {
@@ -584,6 +584,20 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
         }
         if (result is JSObject)
             return this
+        throw JsArrayExecutionError("failed to invoke $SORT() function.")
+    }
+
+    override fun sortAny(sortFunction: JsArraySortFunction<Any?>?): JsArrayInterface<Any?> {
+        val result = if (sortFunction == null)
+            invoke(SORT)
+        else {
+            this.with("__sort_cb__", sortFunction) { sortFunc_ ->
+                // BugFix #1
+                execute("this.$SORT((a, b)=>{ return $sortFunc_(${undefine2Null("a")}, ${undefine2Null("b")}) });")
+            }
+        }
+        if (result is JSObject)
+            return JsArray(result)
         throw JsArrayExecutionError("failed to invoke $SORT() function.")
     }
 
