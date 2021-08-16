@@ -12,6 +12,6 @@ typealias JsObjectArray = JsArray<JSObject?>
 typealias TypedSortComparator<T> = (a: T?, b:T?)->Boolean
 typealias UntypedSortComparator = (ab: Pair<Any?, Any?>)->Boolean
 typealias TypedCallback2<T, R> = (index: Int, value: T?)->R
-typealias UnTypedCallback2<R> = (indexValue: Pair<Int, Any?>)->R
+typealias UntypedCallback2<R> = (indexValue: Pair<Int, Any?>)->R
 typealias TypedCallback3<T, R> = (index: Int, value: T?, total: T?)->R
 typealias UnTypedCallback3<R> = (indexValueTotal: Triple<Int, Any?, Any?>)->R

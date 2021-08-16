@@ -601,7 +601,7 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
             }
         })
 
-    inline fun every(crossinline callback: UnTypedCallback2<Boolean>) =
+    inline fun every(crossinline callback: UntypedCallback2<Boolean>) =
         this.every(object : UnTypedIteratorCallback<Boolean> {
             override fun call(currentValue: Any?, index: Int, total: Any?, arr: Any?): Boolean {
                 return callback(index to currentValue)
@@ -615,7 +615,7 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
             }
         })
 
-    inline fun some(crossinline callback: UnTypedCallback2<Boolean>) =
+    inline fun some(crossinline callback: UntypedCallback2<Boolean>) =
         this.some(object : UnTypedIteratorCallback<Boolean> {
             override fun call(currentValue: Any?, index: Int, total: Any?, arr: Any?): Boolean {
                 return callback(index to currentValue)
@@ -630,7 +630,7 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
             }
         })
 
-    inline fun forEach(crossinline callback: UnTypedCallback2<Unit>) =
+    inline fun forEach(crossinline callback: UntypedCallback2<Unit>) =
         this.forEach(object : UnTypedIteratorCallback<Unit> {
             override fun call(currentValue: Any?, index: Int, total: Any?, arr: Any?) {
                 callback(index to currentValue)
@@ -644,14 +644,14 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
             }
         })
 
-    inline fun find(crossinline callback: UnTypedCallback2<Boolean>) =
+    inline fun find(crossinline callback: UntypedCallback2<Boolean>) =
         this.find(object : UnTypedIteratorCallback<Boolean> {
             override fun call(currentValue: Any?, index: Int, total: Any?, arr: Any?): Boolean {
                 return callback(index to currentValue)
             }
         })
 
-    inline fun findAny(crossinline callback: UnTypedCallback2<Boolean>) =
+    inline fun findAny(crossinline callback: UntypedCallback2<Boolean>) =
         this.findAny(object : UnTypedIteratorCallback<Boolean> {
             override fun call(currentValue: Any?, index: Int, total: Any?, arr: Any?): Boolean {
                 return callback(index to currentValue)
@@ -666,7 +666,7 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
             }
         })
 
-    inline fun findIndex(crossinline callback: UnTypedCallback2<Boolean>) =
+    inline fun findIndex(crossinline callback: UntypedCallback2<Boolean>) =
         this.findIndex(object : UnTypedIteratorCallback<Boolean> {
             override fun call(currentValue: Any?, index: Int, total: Any?, arr: Any?): Boolean {
                 return callback(index to currentValue)
@@ -689,7 +689,7 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
         startIndex: Int = 0,
         stopIndex: Int = -1,
         step: Int = 1,
-        crossinline callback: UnTypedCallback2<Boolean>
+        crossinline callback: UntypedCallback2<Boolean>
     ) =
         this.forLoop(object : UnTypedIteratorCallback<Boolean> {
             override fun call(currentValue: Any?, index: Int, total: Any?, arr: Any?): Boolean {
@@ -705,14 +705,14 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
             }
         })
 
-    inline fun filter(crossinline callback: UnTypedCallback2<Boolean>) =
+    inline fun filter(crossinline callback: UntypedCallback2<Boolean>) =
         this.filter(object : UnTypedIteratorCallback<Boolean> {
             override fun call(currentValue: Any?, index: Int, total: Any?, arr: Any?): Boolean {
                 return callback(index to currentValue)
             }
         })
 
-    inline fun filterAny(crossinline callback: UnTypedCallback2<Boolean>) =
+    inline fun filterAny(crossinline callback: UntypedCallback2<Boolean>) =
         this.filterAny(object : UnTypedIteratorCallback<Boolean> {
             override fun call(currentValue: Any?, index: Int, total: Any?, arr: Any?): Boolean {
                 return callback(index to currentValue)
@@ -726,14 +726,14 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
             }
         })
 
-    inline fun map(crossinline callback: UnTypedCallback2<T>) =
+    inline fun map(crossinline callback: UntypedCallback2<T>) =
         this.map(object : UnTypedIteratorCallback<T?> {
             override fun call(currentValue: Any?, index: Int, total: Any?, arr: Any?): T? {
                 return callback(index to currentValue)
             }
         })
 
-    inline fun mapAny(crossinline callback: UnTypedCallback2<Any?>) =
+    inline fun mapAny(crossinline callback: UntypedCallback2<Any?>) =
         this.mapAny(object : UnTypedIteratorCallback<Any?> {
             override fun call(currentValue: Any?, index: Int, total: Any?, arr: Any?): Any? {
                 return callback(index to currentValue)
