@@ -29,6 +29,7 @@ interface JsArrayInterface<T> {
     operator fun get(index: Int): T?
     fun getAny(index: Int): Any?
     fun concat(other: JsArrayInterface<T>): JsArrayInterface<T>
+    fun concatAny(other: JsArrayInterface<T>): JsArrayInterface<Any?>
     fun join(separator: String = ","): String
     fun reverse(): JsArrayInterface<T>
     fun pop(): Any?
