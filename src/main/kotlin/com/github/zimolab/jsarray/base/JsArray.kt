@@ -28,6 +28,7 @@ import com.github.zimolab.jsarray.base.JsAPIs.Array.UNSHIFT
 import com.github.zimolab.jsarray.base.JsAPIs.UNDEFINED
 import javafx.scene.web.WebEngine
 import netscape.javascript.JSObject
+import java.util.logging.Logger
 
 @Suppress("UNCHECKED_CAST")
 class JsArray<T>
@@ -290,7 +291,7 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
         }
     }
 
-    override fun includes(element: Any?, start: Int): Boolean {
+    override fun includes(element: T, start: Int): Boolean {
         val result = if (element == null) {
             execute("this.$INCLUDES(null, $start) || this.$INCLUDES($UNDEFINED, $start)")
         } else {
@@ -302,7 +303,38 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
         }
     }
 
-    override fun indexOf(element: Any?, start: Int): Int {
+    override fun includesAny(element: Any?, start: Int): Boolean {
+        val result = if (element == null) {
+            execute("this.$INCLUDES(null, $start) || this.$INCLUDES($UNDEFINED, $start)")
+        } else {
+            invoke(INCLUDES, element, start)
+        }
+        return when (result) {
+            is Boolean -> result
+            else -> throw JsArrayExecutionError("failed to invoke $INCLUDES() function.")
+        }
+    }
+
+    override fun indexOf(element: T, start: Int): Int {
+        val result = if (element == null) {
+//            Logger.getGlobal().warning("The includes(null) call may return an inaccurate result.Use indexOf(null) instead.")
+//            execute(
+//                "{" +
+//                        "let __tmp=this.$INDEX_OF(null, $start);" +
+//                        "__tmp!=-1?__tmp:this.$INDEX_OF($UNDEFINED, $start);" +
+//                        "}"
+//            )
+            indexOfAny(element, start)
+        } else {
+            invoke(INDEX_OF, element, start)
+        }
+        return when (result) {
+            is Int -> result
+            else -> throw JsArrayExecutionError("failed to invoke $INDEX_OF() function.")
+        }
+    }
+
+    override fun indexOfAny(element: Any?, start: Int): Int {
         val result = if (element == null) {
             execute(
                 "{" +
@@ -319,7 +351,27 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
         }
     }
 
-    override fun lastIndexOf(element: Any?, start: Int): Int {
+    override fun lastIndexOf(element: T, start: Int): Int {
+        val result = if (element == null) {
+//            Logger.getGlobal().warning("The lastIndexOf(null) call may return an inaccurate result.Use lastIndexOf(null) instead.")
+//            execute(
+//                "" +
+//                        "{" +
+//                        "let __tmp=this.$LAST_INDEX_OF(null, $start);" +
+//                        "__tmp!=-1?__tmp:this.$LAST_INDEX_OF($UNDEFINED, $start);" +
+//                        "}"
+//            )
+            lastIndexOfAny(element, start)
+        } else {
+            invoke(LAST_INDEX_OF, element, start)
+        }
+        return when (result) {
+            is Int -> result
+            else -> throw JsArrayExecutionError("failed to invoke $LAST_INDEX_OF() function.")
+        }
+    }
+
+    override fun lastIndexOfAny(element: Any?, start: Int): Int {
         val result = if (element == null) {
             execute(
                 "" +
@@ -334,8 +386,7 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
         return when (result) {
             is Int -> result
             else -> throw JsArrayExecutionError("failed to invoke $LAST_INDEX_OF() function.")
-        }
-    }
+        }    }
 
     // BugFix #1
     private fun undefine2Null(name: String): String {
