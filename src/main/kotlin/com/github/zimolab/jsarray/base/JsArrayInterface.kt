@@ -66,8 +66,8 @@ interface JsArrayInterface<T> {
     fun mapAny(callback: UnTypedIteratorCallback<Any?>): JsArrayInterface<Any?>
     fun filterAny(callback: UnTypedIteratorCallback<Boolean>): JsArrayInterface<Any?>
     fun findAny(callback: UnTypedIteratorCallback<Boolean>): Any?
-    fun spliceAny(index: Int, count: Int, vararg items: T?): JsArrayInterface<Any?>
-    fun sliceAny(start: Int, end: Int? = null): JsArrayInterface<Any?>
+    //fun spliceAny(index: Int, count: Int, vararg items: T?): JsArrayInterface<Any?>
+    //fun sliceAny(start: Int, end: Int? = null): JsArrayInterface<Any?>
     fun shiftAny(): Any?
     fun popAny(): Any?
     fun concatAny(other: JsArrayInterface<T>): JsArrayInterface<Any?>
