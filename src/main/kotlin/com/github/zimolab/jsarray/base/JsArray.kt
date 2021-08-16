@@ -462,7 +462,7 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
     }
 
     override fun reduce(initialValue: T?, callback: JsArrayIteratorCallback<T?, T?>): T? {
-        val result = this.with("__reduce_cb__", callback) { callback_ ->
+        return this.with("__reduce_cb__", callback) { callback_ ->
             // BugFix #1
             execute(
                 "{" +
@@ -471,12 +471,26 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
                         "__tmp==$UNDEFINED?null:__tmp;" +
                         "}"
             )
-        } ?: return null
-        return result as T
+        }?.let {
+            it as T
+        }
+    }
+
+    override fun reduceAny(initialValue: Any?, callback: JsArrayIteratorCallback<Any?, Any?>): Any? {
+        return this.with("__reduce_cb__", callback) { callback_ ->
+            // BugFix #1
+            execute(
+                "{" +
+                        "let __tmp=this.$REDUCE((total, item, index, arr)=>{ " +
+                        "return $callback_(${undefine2Null("item")}, index, ${undefine2Null("total")}, arr) }, $initialValue);" +
+                        "__tmp==$UNDEFINED?null:__tmp;" +
+                        "}"
+            )
+        }
     }
 
     override fun reduce(callback: JsArrayIteratorCallback<T?, T?>): T? {
-        val result = this.with("__reduce_cb__", callback) { callback_ ->
+        return this.with("__reduce_cb__", callback) { callback_ ->
             // BugFix #1
             execute(
                 "{" +
@@ -485,8 +499,22 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
                         "__tmp==$UNDEFINED?null:__tmp;" +
                         "}"
             )
-        } ?: return null
-        return result as T
+        }?.let {
+            it as T
+        }
+    }
+
+    override fun reduceAny(callback: JsArrayIteratorCallback<Any?, Any?>): Any? {
+        return this.with("__reduce_cb__", callback) { callback_ ->
+            // BugFix #1
+            execute(
+                "{" +
+                        "let __tmp=this.$REDUCE((total, item, index, arr)=>{ " +
+                        "return $callback_(${undefine2Null("item")}, index, ${undefine2Null("total")}, arr) });" +
+                        "__tmp==$UNDEFINED?null:__tmp;" +
+                        "}"
+            )
+        }
     }
 
     override fun reduceRight(initialValue: T?, callback: JsArrayIteratorCallback<T?, T?>): T? {
