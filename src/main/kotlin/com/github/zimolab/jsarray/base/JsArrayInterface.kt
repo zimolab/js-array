@@ -26,7 +26,7 @@ interface JsArrayInterface<T> {
     val reference: JSObject
 
     operator fun set(index: Int, value: T?)
-    operator fun get(index: Int): Any?
+    operator fun get(index: Int): T?
     fun concat(other: JsArrayInterface<T>): JsArrayInterface<T>
     fun join(separator: String = ","): String
     fun reverse(): JsArrayInterface<T>
