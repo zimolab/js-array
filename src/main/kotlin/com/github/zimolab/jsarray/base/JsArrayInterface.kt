@@ -59,13 +59,13 @@ interface JsArrayInterface<T> {
     // Any版的API旨在减少由于类型转换而可能引发的异常。这些异常一般发生在以下两个场景中：
     // 1、从js回调java函数时，如果js传递的参数不能由WebEngine自动映射为java回调函数所声明的参数类型则引发异常
     // 2、"xxx as T"语句调用失败时，有一部分函数的返回值为T?，因此可能需要编写诸如”return result as T“，如果不能转换则会引发异常
-    fun reduceRightAny(callback: UnTypedIteratorCallback<Any?>): Any?
-    fun reduceRightAny(initialValue: Any?, callback: UnTypedIteratorCallback<Any?>): Any?
-    fun reduceAny(callback: UnTypedIteratorCallback<Any?>): Any?
+    fun reduceRightAny(callback: UntypedIteratorCallback<Any?>): Any?
+    fun reduceRightAny(initialValue: Any?, callback: UntypedIteratorCallback<Any?>): Any?
+    fun reduceAny(callback: UntypedIteratorCallback<Any?>): Any?
     fun reduceAny(initialValue: Any?, callback: JsArrayIteratorCallback<Any?, Any?>): Any?
-    fun mapAny(callback: UnTypedIteratorCallback<Any?>): JsArrayInterface<Any?>
-    fun filterAny(callback: UnTypedIteratorCallback<Boolean>): JsArrayInterface<Any?>
-    fun findAny(callback: UnTypedIteratorCallback<Boolean>): Any?
+    fun mapAny(callback: UntypedIteratorCallback<Any?>): JsArrayInterface<Any?>
+    fun filterAny(callback: UntypedIteratorCallback<Boolean>): JsArrayInterface<Any?>
+    fun findAny(callback: UntypedIteratorCallback<Boolean>): Any?
     fun shiftAny(): Any?
     fun popAny(): Any?
     fun concatAny(other: JsArrayInterface<T>): JsArrayInterface<Any?>

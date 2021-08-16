@@ -6,6 +6,6 @@ interface JsArrayIteratorCallback<in T, R> {
 
 interface TypedIteratorCallback<in T, R> : JsArrayIteratorCallback<T, R>
 
-interface UnTypedIteratorCallback<R> : JsArrayIteratorCallback<Any?, R> {
+interface UntypedIteratorCallback<R> : JsArrayIteratorCallback<Any?, R> {
     override fun call(currentValue: Any?, index: Int, total: Any?, arr: Any?): R
 }
