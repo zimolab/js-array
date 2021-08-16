@@ -831,7 +831,7 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
             }
         })
 
-    inline fun sort(crossinline callback: UnTypedSortComparator) =
+    inline fun sort(crossinline callback: UntypedSortComparator) =
         this.sort(object : UnTypedSortFunction {
             override fun compare(a: Any?, b: Any?): Boolean {
                 return callback(a to b)
