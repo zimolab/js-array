@@ -54,6 +54,7 @@ interface JsArrayInterface<T> {
     fun filter(callback: JsArrayIteratorCallback<T?, Boolean>): JsArrayInterface<T>
     fun filterAny(callback: UnTypedIteratorCallback<Boolean>): JsArrayInterface<Any?>
     fun map(callback: JsArrayIteratorCallback<T?, T?>): JsArrayInterface<T>
+    fun mapAny(callback: JsArrayIteratorCallback<Any?, Any?>): JsArrayInterface<Any?>
     fun every(callback: JsArrayIteratorCallback<T?, Boolean>): Boolean
     fun some(callback: JsArrayIteratorCallback<T?, Boolean>): Boolean
     fun reduce(initialValue: T?, callback: JsArrayIteratorCallback<T?, T?>): T?

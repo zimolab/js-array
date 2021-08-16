@@ -421,7 +421,17 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
         throw JsArrayExecutionError("failed to invoke $FILTER() function.")
     }
 
-    override fun map(callback: JsArrayIteratorCallback<T?, T?>): JsArray<T> {
+    override fun map(callback: JsArrayIteratorCallback<T?, T?>): JsArrayInterface<T> {
+        val result = this.with("__map_cb__", callback) { callback_ ->
+            // BugFix #1
+            execute("this.$MAP((item, index, arr)=>{ return $callback_(${undefine2Null("item")}, index, null, arr); })")
+        }
+        if (result is JSObject)
+            return JsArray(result)
+        throw JsArrayExecutionError("failed to invoke $MAP() function.")
+    }
+
+    override fun mapAny(callback: JsArrayIteratorCallback<Any?, Any?>): JsArrayInterface<Any?> {
         val result = this.with("__map_cb__", callback) { callback_ ->
             // BugFix #1
             execute("this.$MAP((item, index, arr)=>{ return $callback_(${undefine2Null("item")}, index, null, arr); })")
