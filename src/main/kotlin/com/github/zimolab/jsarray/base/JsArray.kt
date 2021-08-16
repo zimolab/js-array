@@ -587,20 +587,6 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
         throw JsArrayExecutionError("failed to invoke $SORT() function.")
     }
 
-    override fun sortAny(sortFunction: JsArraySortFunction<Any?>?): JsArrayInterface<Any?> {
-        val result = if (sortFunction == null)
-            invoke(SORT)
-        else {
-            this.with("__sort_cb__", sortFunction) { sortFunc_ ->
-                // BugFix #1
-                execute("this.$SORT((a, b)=>{ return $sortFunc_(${undefine2Null("a")}, ${undefine2Null("b")}) });")
-            }
-        }
-        if (result is JSObject)
-            return JsArray(result)
-        throw JsArrayExecutionError("failed to invoke $SORT() function.")
-    }
-
     override fun toJsAnyArray(): JsArrayInterface<Any?> {
         return JsArray(this.reference)
     }
@@ -665,6 +651,13 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
             }
         })
 
+    inline fun findAny(crossinline callback: UnTypedCallback2<Boolean>) =
+        this.findAny(object : UnTypedIteratorCallback<Boolean> {
+            override fun call(currentValue: Any?, index: Int, total: Any?, arr: Any?): Boolean {
+                return callback(index to currentValue)
+            }
+        })
+
 
     inline fun findIndex(crossinline callback: TypedCallback2<T, Boolean>) =
         this.findIndex(object : TypedIteratorCallback<T?, Boolean> {
@@ -719,6 +712,13 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
             }
         })
 
+    inline fun filterAny(crossinline callback: UnTypedCallback2<Boolean>) =
+        this.filterAny(object : UnTypedIteratorCallback<Boolean> {
+            override fun call(currentValue: Any?, index: Int, total: Any?, arr: Any?): Boolean {
+                return callback(index to currentValue)
+            }
+        })
+
     inline fun map(crossinline callback: TypedCallback2<T, T>) =
         this.map(object : TypedIteratorCallback<T?, T?> {
             override fun call(currentValue: T?, index: Int, total: T?, arr: Any?): T? {
@@ -729,6 +729,13 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
     inline fun map(crossinline callback: UnTypedCallback2<T>) =
         this.map(object : UnTypedIteratorCallback<T?> {
             override fun call(currentValue: Any?, index: Int, total: Any?, arr: Any?): T? {
+                return callback(index to currentValue)
+            }
+        })
+
+    inline fun mapAny(crossinline callback: UnTypedCallback2<Any?>) =
+        this.mapAny(object : UnTypedIteratorCallback<Any?> {
+            override fun call(currentValue: Any?, index: Int, total: Any?, arr: Any?): Any? {
                 return callback(index to currentValue)
             }
         })
@@ -747,6 +754,13 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
             }
         })
 
+    inline fun reduceAny(initialValue: Any?, crossinline callback: UnTypedCallback3<Any?>) =
+        this.reduceAny(initialValue, object : UnTypedIteratorCallback<Any?> {
+            override fun call(currentValue: Any?, index: Int, total: Any?, arr: Any?): Any? {
+                return callback(Triple(index, currentValue, total))
+            }
+        })
+
     inline fun reduce(crossinline callback: TypedCallback3<T, T>) =
         this.reduce(object : TypedIteratorCallback<T?, T?> {
             override fun call(currentValue: T?, index: Int, total: T?, arr: Any?): T? {
@@ -761,6 +775,12 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
             }
         })
 
+    inline fun reduceAny(crossinline callback: UnTypedCallback3<Any?>) =
+        this.reduceAny(object : UnTypedIteratorCallback<Any?> {
+            override fun call(currentValue: Any?, index: Int, total: Any?, arr: Any?): Any? {
+                return callback(Triple(index, currentValue, total))
+            }
+        })
 
     inline fun reduceRight(initialValue: T?, crossinline callback: TypedCallback3<T, T>) =
         this.reduceRight(initialValue, object : TypedIteratorCallback<T?, T?> {
@@ -776,6 +796,13 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
             }
         })
 
+    inline fun reduceRightAny(initialValue: Any?, crossinline callback: UnTypedCallback3<Any?>) =
+        this.reduceRightAny(initialValue, object : UnTypedIteratorCallback<Any?> {
+            override fun call(currentValue: Any?, index: Int, total: Any?, arr: Any?): Any? {
+                return callback(Triple(index, currentValue, total))
+            }
+        })
+
     inline fun reduceRight(crossinline callback: TypedCallback3<T, T>) =
         this.reduceRight(object : TypedIteratorCallback<T?, T?> {
             override fun call(currentValue: T?, index: Int, total: T?, arr: Any?): T? {
@@ -786,6 +813,13 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
     inline fun reduceRight(crossinline callback: UnTypedCallback3<T>) =
         this.reduce(object : UnTypedIteratorCallback<T?> {
             override fun call(currentValue: Any?, index: Int, total: Any?, arr: Any?): T? {
+                return callback(Triple(index, currentValue, total))
+            }
+        })
+
+    inline fun reduceRightAny(crossinline callback: UnTypedCallback3<Any?>) =
+        this.reduceRightAny(object : UnTypedIteratorCallback<Any?> {
+            override fun call(currentValue: Any?, index: Int, total: Any?, arr: Any?): Any? {
                 return callback(Triple(index, currentValue, total))
             }
         })
