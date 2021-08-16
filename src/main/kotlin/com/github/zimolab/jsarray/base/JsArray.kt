@@ -331,7 +331,42 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
         }
     }
 
+    override fun indexOfAny(element: Any?, start: Int): Int {
+        val result = if (element == null) {
+            execute(
+                "{" +
+                        "let __tmp=this.$INDEX_OF(null, $start);" +
+                        "__tmp!=-1?__tmp:this.$INDEX_OF($UNDEFINED, $start);" +
+                        "}"
+            )
+        } else {
+            invoke(INDEX_OF, element, start)
+        }
+        return when (result) {
+            is Int -> result
+            else -> throw JsArrayExecutionError("failed to invoke $INDEX_OF() function.")
+        }
+    }
+
     override fun lastIndexOf(element: T?, start: Int): Int {
+        val result = if (element == null) {
+            execute(
+                "" +
+                        "{" +
+                        "let __tmp=this.$LAST_INDEX_OF(null, $start);" +
+                        "__tmp!=-1?__tmp:this.$LAST_INDEX_OF($UNDEFINED, $start);" +
+                        "}"
+            )
+        } else {
+            invoke(LAST_INDEX_OF, element, start)
+        }
+        return when (result) {
+            is Int -> result
+            else -> throw JsArrayExecutionError("failed to invoke $LAST_INDEX_OF() function.")
+        }
+    }
+
+    override fun lastIndexOfAny(element: Any?, start: Int): Int {
         val result = if (element == null) {
             execute(
                 "" +

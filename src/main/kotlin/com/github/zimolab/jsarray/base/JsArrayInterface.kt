@@ -70,6 +70,8 @@ interface JsArrayInterface<T> {
     fun popAny(): Any?
     fun concatAny(other: JsArrayInterface<T>): JsArrayInterface<Any?>
     fun getAny(index: Int): Any?
-    fun includesAny(element: Any?, start: Int): Boolean
+    fun includesAny(element: Any?, start: Int=0): Boolean
+    fun indexOfAny(element: Any?, start: Int=0): Int
+    fun lastIndexOfAny(element: Any?, start: Int=0): Int
 
 }
