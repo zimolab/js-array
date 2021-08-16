@@ -431,7 +431,7 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
         throw JsArrayExecutionError("failed to invoke $MAP() function.")
     }
 
-    override fun mapAny(callback: JsArrayIteratorCallback<Any?, Any?>): JsArrayInterface<Any?> {
+    override fun mapAny(callback: UnTypedIteratorCallback<Any?>): JsArrayInterface<Any?> {
         val result = this.with("__map_cb__", callback) { callback_ ->
             // BugFix #1
             execute("this.$MAP((item, index, arr)=>{ return $callback_(${undefine2Null("item")}, index, null, arr); })")
@@ -504,7 +504,7 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
         }
     }
 
-    override fun reduceAny(callback: JsArrayIteratorCallback<Any?, Any?>): Any? {
+    override fun reduceAny(callback: UnTypedIteratorCallback<Any?>): Any? {
         return this.with("__reduce_cb__", callback) { callback_ ->
             // BugFix #1
             execute(
@@ -532,7 +532,7 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
         }
     }
 
-    override fun reduceRightAny(initialValue: Any?, callback: JsArrayIteratorCallback<Any?, Any?>): Any? {
+    override fun reduceRightAny(initialValue: Any?, callback: UnTypedIteratorCallback<Any?>): Any? {
         return this.with("__reduce_cb__", callback) { callback_ ->
             // BugFix #1
             execute(
@@ -560,7 +560,7 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
         }
     }
 
-    override fun reduceRightAny(callback: JsArrayIteratorCallback<Any?, Any?>): Any? {
+    override fun reduceRightAny(callback: UnTypedIteratorCallback<Any?>): Any? {
         return this.with("__reduce_cb__", callback) { callback_ ->
             // BugFix #1
             execute(
@@ -599,6 +599,10 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
         if (result is JSObject)
             return JsArray(result)
         throw JsArrayExecutionError("failed to invoke $SORT() function.")
+    }
+
+    override fun toJsAnyArray(): JsArrayInterface<Any?> {
+        return JsArray(this.reference)
     }
 
     // 扩展API（基于核心API）
