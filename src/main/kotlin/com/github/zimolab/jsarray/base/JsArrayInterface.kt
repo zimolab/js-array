@@ -39,9 +39,9 @@ interface JsArrayInterface<T> {
     fun fill(value: T?, start: Int = 0, end: Int? = null): JsArrayInterface<T>
     fun find(callback: JsArrayIteratorCallback<T?, Boolean>): T?
     fun findIndex(callback: JsArrayIteratorCallback<T?, Boolean>): Int
-    fun includes(element: T?, start: Int = 0): Boolean
-    fun indexOf(element: T?, start: Int = 0): Int
-    fun lastIndexOf(element: T?, start: Int = -1): Int
+    fun includes(element: Any?, start: Int = 0): Boolean
+    fun indexOf(element: Any?, start: Int = 0): Int
+    fun lastIndexOf(element: Any?, start: Int = -1): Int
     fun forLoop(callback: JsArrayIteratorCallback<T?, Boolean>, startIndex: Int = 0, stopIndex: Int = -1, step: Int = 1)
     fun forEach(callback: JsArrayIteratorCallback<T?, Unit>)
     fun filter(callback: JsArrayIteratorCallback<T?, Boolean>): JsArrayInterface<T>
@@ -70,8 +70,5 @@ interface JsArrayInterface<T> {
     fun popAny(): Any?
     fun concatAny(other: JsArrayInterface<T>): JsArrayInterface<Any?>
     fun getAny(index: Int): Any?
-    fun includesAny(element: Any?, start: Int=0): Boolean
-    fun indexOfAny(element: Any?, start: Int=0): Int
-    fun lastIndexOfAny(element: Any?, start: Int=0): Int
 
 }
