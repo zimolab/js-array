@@ -28,7 +28,6 @@ import com.github.zimolab.jsarray.base.JsAPIs.Array.UNSHIFT
 import com.github.zimolab.jsarray.base.JsAPIs.UNDEFINED
 import javafx.scene.web.WebEngine
 import netscape.javascript.JSObject
-import java.util.logging.Logger
 
 @Suppress("UNCHECKED_CAST")
 class JsArray<T>
@@ -879,14 +878,14 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
 
     inline fun sort(crossinline callback: TypedSortComparator<T>) =
         this.sort(object : TypedSortFunction<T?> {
-            override fun compare(a: T?, b: T?): Boolean {
+            override fun compare(a: T?, b: T?): Int {
                 return callback(a, b)
             }
         })
 
     inline fun sort(crossinline callback: UntypedSortComparator) =
         this.sort(object : UnTypedSortFunction {
-            override fun compare(a: Any?, b: Any?): Boolean {
+            override fun compare(a: Any?, b: Any?): Int {
                 return callback(a to b)
             }
         })

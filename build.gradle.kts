@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "com.github.zimolab"
-version = "0.1.5-Alpha"
+version = "0.1.6-Alpha"
 
 val groupIdDef = group.toString()
 val versionIdDef = version.toString()
