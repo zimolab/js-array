@@ -512,33 +512,33 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
         throw JsArrayExecutionError("failed to invoke $SOME() function.")
     }
 
-    override fun reduce(initialValue: T?, callback: JsArrayIteratorCallback<T?, T?>): T? {
-        return this.with("__reduce_cb__", callback) { callback_ ->
-            // BugFix #1
-            execute(
-                "{" +
-                        "let __tmp=this.$REDUCE((total, item, index, arr)=>{ " +
-                        "return $callback_(${undefine2Null("item")}, index, ${undefine2Null("total")}, arr) }, $initialValue);" +
-                        "__tmp==$UNDEFINED?null:__tmp;" +
-                        "}"
-            )
-        }?.let {
-            it as T
-        }
-    }
+//    override fun reduce(initialValue: T?, callback: JsArrayIteratorCallback<T?, T?>): T? {
+//        return this.with("__reduce_cb__", callback) { callback_ ->
+//            // BugFix #1
+//            execute(
+//                "{" +
+//                        "let __tmp=this.$REDUCE((total, item, index, arr)=>{ " +
+//                        "return $callback_(${undefine2Null("item")}, index, ${undefine2Null("total")}, arr) }, $initialValue);" +
+//                        "__tmp==$UNDEFINED?null:__tmp;" +
+//                        "}"
+//            )
+//        }?.let {
+//            it as T
+//        }
+//    }
 
-    override fun reduceAny(initialValue: Any?, callback: JsArrayIteratorCallback<Any?, Any?>): Any? {
-        return this.with("__reduce_cb__", callback) { callback_ ->
-            // BugFix #1
-            execute(
-                "{" +
-                        "let __tmp=this.$REDUCE((total, item, index, arr)=>{ " +
-                        "return $callback_(${undefine2Null("item")}, index, ${undefine2Null("total")}, arr) }, $initialValue);" +
-                        "__tmp==$UNDEFINED?null:__tmp;" +
-                        "}"
-            )
-        }
-    }
+//    override fun reduceAny(initialValue: Any?, callback: JsArrayIteratorCallback<Any?, Any?>): Any? {
+//        return this.with("__reduce_cb__", callback) { callback_ ->
+//            // BugFix #1
+//            execute(
+//                "{" +
+//                        "let __tmp=this.$REDUCE((total, item, index, arr)=>{ " +
+//                        "return $callback_(${undefine2Null("item")}, index, ${undefine2Null("total")}, arr) }, $initialValue);" +
+//                        "__tmp==$UNDEFINED?null:__tmp;" +
+//                        "}"
+//            )
+//        }
+//    }
 
     override fun reduce(callback: JsArrayIteratorCallback<T?, T?>): T? {
         return this.with("__reduce_cb__", callback) { callback_ ->
@@ -568,33 +568,33 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
         }
     }
 
-    override fun reduceRight(initialValue: T?, callback: JsArrayIteratorCallback<T?, T?>): T? {
-        return this.with("__reduce_cb__", callback) { callback_ ->
-            // BugFix #1
-            execute(
-                "{" +
-                        "let __tmp=this.${REDUCE_RIGHT}((total, item, index, arr)=>{ " +
-                        "return $callback_(${undefine2Null("item")}, index, ${undefine2Null("total")}, arr) }, $initialValue);" +
-                        "__tmp==$UNDEFINED?null:__tmp;" +
-                        "}"
-            )
-        }?.let {
-            it as T
-        }
-    }
+//    override fun reduceRight(initialValue: T?, callback: JsArrayIteratorCallback<T?, T?>): T? {
+//        return this.with("__reduce_cb__", callback) { callback_ ->
+//            // BugFix #1
+//            execute(
+//                "{" +
+//                        "let __tmp=this.${REDUCE_RIGHT}((total, item, index, arr)=>{ " +
+//                        "return $callback_(${undefine2Null("item")}, index, ${undefine2Null("total")}, arr) }, $initialValue);" +
+//                        "__tmp==$UNDEFINED?null:__tmp;" +
+//                        "}"
+//            )
+//        }?.let {
+//            it as T
+//        }
+//    }
 
-    override fun reduceRightAny(initialValue: Any?, callback: UntypedIteratorCallback<Any?>): Any? {
-        return this.with("__reduce_cb__", callback) { callback_ ->
-            // BugFix #1
-            execute(
-                "{" +
-                        "let __tmp=this.${REDUCE_RIGHT}((total, item, index, arr)=>{ " +
-                        "return $callback_(${undefine2Null("item")}, index, ${undefine2Null("total")}, arr) }, $initialValue);" +
-                        "__tmp==$UNDEFINED?null:__tmp;" +
-                        "}"
-            )
-        }
-    }
+//    override fun reduceRightAny(initialValue: Any?, callback: UntypedIteratorCallback<Any?>): Any? {
+//        return this.with("__reduce_cb__", callback) { callback_ ->
+//            // BugFix #1
+//            execute(
+//                "{" +
+//                        "let __tmp=this.${REDUCE_RIGHT}((total, item, index, arr)=>{ " +
+//                        "return $callback_(${undefine2Null("item")}, index, ${undefine2Null("total")}, arr) }, $initialValue);" +
+//                        "__tmp==$UNDEFINED?null:__tmp;" +
+//                        "}"
+//            )
+//        }
+//    }
 
     override fun reduceRight(callback: JsArrayIteratorCallback<T?, T?>): T? {
         return this.with("__reduce_cb__", callback) { callback_ ->
@@ -791,26 +791,26 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
             }
         })
 
-    inline fun reduce(initialValue: T?, crossinline callback: TypedCallback3<T, T>) =
-        this.reduce(initialValue, object : TypedIteratorCallback<T?, T?> {
-            override fun call(currentValue: T?, index: Int, total: T?, arr: Any?): T? {
-                return callback(index, currentValue, total)
-            }
-        })
+//    inline fun reduce(initialValue: T?, crossinline callback: TypedCallback3<T, T>) =
+//        this.reduce(initialValue, object : TypedIteratorCallback<T?, T?> {
+//            override fun call(currentValue: T?, index: Int, total: T?, arr: Any?): T? {
+//                return callback(index, currentValue, total)
+//            }
+//        })
+//
+//    inline fun reduce(initialValue: T?, crossinline callback: UntypedCallback3<T>) =
+//        this.reduce(initialValue, object : UntypedIteratorCallback<T?> {
+//            override fun call(currentValue: Any?, index: Int, total: Any?, arr: Any?): T? {
+//                return callback(Triple(index, currentValue, total))
+//            }
+//        })
 
-    inline fun reduce(initialValue: T?, crossinline callback: UntypedCallback3<T>) =
-        this.reduce(initialValue, object : UntypedIteratorCallback<T?> {
-            override fun call(currentValue: Any?, index: Int, total: Any?, arr: Any?): T? {
-                return callback(Triple(index, currentValue, total))
-            }
-        })
-
-    inline fun reduceAny(initialValue: Any?, crossinline callback: UntypedCallback3<Any?>) =
-        this.reduceAny(initialValue, object : UntypedIteratorCallback<Any?> {
-            override fun call(currentValue: Any?, index: Int, total: Any?, arr: Any?): Any? {
-                return callback(Triple(index, currentValue, total))
-            }
-        })
+//    inline fun reduceAny(initialValue: Any?, crossinline callback: UntypedCallback3<Any?>) =
+//        this.reduceAny(initialValue, object : UntypedIteratorCallback<Any?> {
+//            override fun call(currentValue: Any?, index: Int, total: Any?, arr: Any?): Any? {
+//                return callback(Triple(index, currentValue, total))
+//            }
+//        })
 
     inline fun reduce(crossinline callback: TypedCallback3<T, T>) =
         this.reduce(object : TypedIteratorCallback<T?, T?> {
@@ -833,26 +833,26 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
             }
         })
 
-    inline fun reduceRight(initialValue: T?, crossinline callback: TypedCallback3<T, T>) =
-        this.reduceRight(initialValue, object : TypedIteratorCallback<T?, T?> {
-            override fun call(currentValue: T?, index: Int, total: T?, arr: Any?): T? {
-                return callback(index, currentValue, total)
-            }
-        })
+//    inline fun reduceRight(initialValue: T?, crossinline callback: TypedCallback3<T, T>) =
+//        this.reduceRight(initialValue, object : TypedIteratorCallback<T?, T?> {
+//            override fun call(currentValue: T?, index: Int, total: T?, arr: Any?): T? {
+//                return callback(index, currentValue, total)
+//            }
+//        })
 
-    inline fun reduceRight(initialValue: T?, crossinline callback: UntypedCallback3<T>) =
-        this.reduce(initialValue, object : UntypedIteratorCallback<T?> {
-            override fun call(currentValue: Any?, index: Int, total: Any?, arr: Any?): T? {
-                return callback(Triple(index, currentValue, total))
-            }
-        })
+//    inline fun reduceRight(initialValue: T?, crossinline callback: UntypedCallback3<T>) =
+//        this.reduceRight(initialValue, object : UntypedIteratorCallback<T?> {
+//            override fun call(currentValue: Any?, index: Int, total: Any?, arr: Any?): T? {
+//                return callback(Triple(index, currentValue, total))
+//            }
+//        })
 
-    inline fun reduceRightAny(initialValue: Any?, crossinline callback: UntypedCallback3<Any?>) =
-        this.reduceRightAny(initialValue, object : UntypedIteratorCallback<Any?> {
-            override fun call(currentValue: Any?, index: Int, total: Any?, arr: Any?): Any? {
-                return callback(Triple(index, currentValue, total))
-            }
-        })
+//    inline fun reduceRightAny(initialValue: Any?, crossinline callback: UntypedCallback3<Any?>) =
+//        this.reduceRightAny(initialValue, object : UntypedIteratorCallback<Any?> {
+//            override fun call(currentValue: Any?, index: Int, total: Any?, arr: Any?): Any? {
+//                return callback(Triple(index, currentValue, total))
+//            }
+//        })
 
     inline fun reduceRight(crossinline callback: TypedCallback3<T, T>) =
         this.reduceRight(object : TypedIteratorCallback<T?, T?> {
