@@ -631,7 +631,11 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
         else {
             this.with("__sort_cb__", sortFunction) { sortFunc_ ->
                 // BugFix #1
-                execute("this.$SORT((a, b)=>{ return $sortFunc_(${undefine2Null("a")}, ${undefine2Null("b")}) });")
+                execute("this.$SORT((a, b)=>{" +
+                        "a=${undefine2Null("a")};" +
+                        "b=${undefine2Null("b")};" +
+                        "return $sortFunc_(a, b); " +
+                        "});")
             }
         }
         if (result is JSObject)
