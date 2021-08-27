@@ -1,6 +1,5 @@
 package com.github.zimolab.jsarray
 
-import com.github.zimolab.jsarray.base.JsArray
 import netscape.javascript.JSObject
 
 typealias JsAnyArray = JsArray<Any?>

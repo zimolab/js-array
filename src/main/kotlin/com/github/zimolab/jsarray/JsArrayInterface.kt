@@ -1,4 +1,4 @@
-package com.github.zimolab.jsarray.base
+package com.github.zimolab.jsarray
 
 import netscape.javascript.JSObject
 
@@ -48,9 +48,7 @@ interface JsArrayInterface<T> {
     fun map(callback: JsArrayIteratorCallback<T?, T?>): JsArrayInterface<T>
     fun every(callback: JsArrayIteratorCallback<T?, Boolean>): Boolean
     fun some(callback: JsArrayIteratorCallback<T?, Boolean>): Boolean
-    //fun reduce(initialValue: T?, callback: JsArrayIteratorCallback<T?, T?>): T?
     fun reduce(callback: JsArrayIteratorCallback<T?, T?>): T?
-    //fun reduceRight(initialValue: T?, callback: JsArrayIteratorCallback<T?, T?>): T?
     fun reduceRight(callback: JsArrayIteratorCallback<T?, T?>): T?
     fun sort(sortFunction: JsArraySortFunction<T?>? = null): JsArrayInterface<T>
     fun toJsAnyArray(): JsArrayInterface<Any?>
@@ -60,9 +58,7 @@ interface JsArrayInterface<T> {
     // 1、从js回调java函数时，如果js传递的参数不能由WebEngine自动映射为java回调函数所声明的参数类型则引发异常
     // 2、"xxx as T"语句调用失败时，有一部分函数的返回值为T?，因此可能需要编写诸如”return result as T“，如果不能转换则会引发异常
     fun reduceRightAny(callback: UntypedIteratorCallback<Any?>): Any?
-    //fun reduceRightAny(initialValue: Any?, callback: UntypedIteratorCallback<Any?>): Any?
     fun reduceAny(callback: UntypedIteratorCallback<Any?>): Any?
-    //fun reduceAny(initialValue: Any?, callback: JsArrayIteratorCallback<Any?, Any?>): Any?
     fun mapAny(callback: UntypedIteratorCallback<Any?>): JsArrayInterface<Any?>
     fun filterAny(callback: UntypedIteratorCallback<Boolean>): JsArrayInterface<Any?>
     fun findAny(callback: UntypedIteratorCallback<Boolean>): Any?
@@ -73,5 +69,4 @@ interface JsArrayInterface<T> {
     fun includesAny(element: Any?, start: Int=0): Boolean
     fun indexOfAny(element: Any?, start: Int=0): Int
     fun lastIndexOfAny(element: Any?, start: Int=-1): Int
-
 }

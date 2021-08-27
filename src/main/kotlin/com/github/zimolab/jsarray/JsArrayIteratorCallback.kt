@@ -1,4 +1,4 @@
-package com.github.zimolab.jsarray.base
+package com.github.zimolab.jsarray
 
 interface JsArrayIteratorCallback<in T, out R> {
     fun call(currentValue: T, index: Int, total: T?, arr: Any?): R

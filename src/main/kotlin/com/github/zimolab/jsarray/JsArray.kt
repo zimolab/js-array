@@ -1,35 +1,34 @@
-package com.github.zimolab.jsarray.base
+package com.github.zimolab.jsarray
 
-import com.github.zimolab.jsarray.*
-import com.github.zimolab.jsarray.base.JsAPIs.Array.CONCAT
-import com.github.zimolab.jsarray.base.JsAPIs.Array.EVERY
-import com.github.zimolab.jsarray.base.JsAPIs.Array.FILL
-import com.github.zimolab.jsarray.base.JsAPIs.Array.FILTER
-import com.github.zimolab.jsarray.base.JsAPIs.Array.FIND
-import com.github.zimolab.jsarray.base.JsAPIs.Array.FIND_INDEX
-import com.github.zimolab.jsarray.base.JsAPIs.Array.FOR_EACH
-import com.github.zimolab.jsarray.base.JsAPIs.Array.INCLUDES
-import com.github.zimolab.jsarray.base.JsAPIs.Array.INDEX_OF
-import com.github.zimolab.jsarray.base.JsAPIs.Array.JOIN
-import com.github.zimolab.jsarray.base.JsAPIs.Array.LAST_INDEX_OF
-import com.github.zimolab.jsarray.base.JsAPIs.Array.LENGTH
-import com.github.zimolab.jsarray.base.JsAPIs.Array.MAP
-import com.github.zimolab.jsarray.base.JsAPIs.Array.POP
-import com.github.zimolab.jsarray.base.JsAPIs.Array.PUSH
-import com.github.zimolab.jsarray.base.JsAPIs.Array.REDUCE
-import com.github.zimolab.jsarray.base.JsAPIs.Array.REDUCE_RIGHT
-import com.github.zimolab.jsarray.base.JsAPIs.Array.REVERSE
-import com.github.zimolab.jsarray.base.JsAPIs.Array.SHIFT
-import com.github.zimolab.jsarray.base.JsAPIs.Array.SLICE
-import com.github.zimolab.jsarray.base.JsAPIs.Array.SOME
-import com.github.zimolab.jsarray.base.JsAPIs.Array.SORT
-import com.github.zimolab.jsarray.base.JsAPIs.Array.SPLICE
-import com.github.zimolab.jsarray.base.JsAPIs.Array.UNSHIFT
-import com.github.zimolab.jsarray.base.JsAPIs.UNDEFINED
+import com.github.zimolab.jsarray.JsAPIs.Array.CONCAT
+import com.github.zimolab.jsarray.JsAPIs.Array.EVERY
+import com.github.zimolab.jsarray.JsAPIs.Array.FILL
+import com.github.zimolab.jsarray.JsAPIs.Array.FILTER
+import com.github.zimolab.jsarray.JsAPIs.Array.FIND
+import com.github.zimolab.jsarray.JsAPIs.Array.FIND_INDEX
+import com.github.zimolab.jsarray.JsAPIs.Array.FOR_EACH
+import com.github.zimolab.jsarray.JsAPIs.Array.INCLUDES
+import com.github.zimolab.jsarray.JsAPIs.Array.INDEX_OF
+import com.github.zimolab.jsarray.JsAPIs.Array.JOIN
+import com.github.zimolab.jsarray.JsAPIs.Array.LAST_INDEX_OF
+import com.github.zimolab.jsarray.JsAPIs.Array.LENGTH
+import com.github.zimolab.jsarray.JsAPIs.Array.MAP
+import com.github.zimolab.jsarray.JsAPIs.Array.POP
+import com.github.zimolab.jsarray.JsAPIs.Array.PUSH
+import com.github.zimolab.jsarray.JsAPIs.Array.REDUCE
+import com.github.zimolab.jsarray.JsAPIs.Array.REDUCE_RIGHT
+import com.github.zimolab.jsarray.JsAPIs.Array.REVERSE
+import com.github.zimolab.jsarray.JsAPIs.Array.SHIFT
+import com.github.zimolab.jsarray.JsAPIs.Array.SLICE
+import com.github.zimolab.jsarray.JsAPIs.Array.SOME
+import com.github.zimolab.jsarray.JsAPIs.Array.SORT
+import com.github.zimolab.jsarray.JsAPIs.Array.SPLICE
+import com.github.zimolab.jsarray.JsAPIs.Array.UNSHIFT
+import com.github.zimolab.jsarray.JsAPIs.UNDEFINED
 import javafx.scene.web.WebEngine
 import netscape.javascript.JSObject
 
-@Suppress("UNCHECKED_CAST")
+@Suppress("UNCHECKED_CAST", "unused", "MemberVisibilityCanBePrivate")
 class JsArray<T>
 private constructor(override val reference: JSObject) : JsArrayInterface<T> {
 
@@ -252,30 +251,12 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
         throw JsArrayExecutionError("failed to invoke $SLICE() function.")
     }
 
-//    override fun sliceAny(start: Int, end: Int?): JsArrayInterface<Any?> {
-//        val result = if (end == null) {
-//            invoke(SLICE, start)
-//        } else {
-//            invoke(SLICE, start, end)
-//        }
-//        if (result is JSObject)
-//            return JsArray(result)
-//        throw JsArrayExecutionError("failed to invoke $SLICE() function.")
-//    }
-
     override fun splice(index: Int, count: Int, vararg items: T?): JsArrayInterface<T> {
         return when (val result = invoke(SPLICE, index, count, *items)) {
             is JSObject -> JsArray(result)
             else -> throw JsArrayExecutionError("failed to invoke $SPLICE() function.")
         }
     }
-
-//    override fun spliceAny(index: Int, count: Int, vararg items: T?): JsArrayInterface<Any?> {
-//        return when (val result = invoke(SPLICE, index, count, *items)) {
-//            is JSObject -> JsArray(result)
-//            else -> throw JsArrayExecutionError("failed to invoke $SPLICE() function.")
-//        }
-//    }
 
     override fun fill(value: T?, start: Int, end: Int?): JsArrayInterface<T> {
         val result = if (end == null) {
@@ -316,13 +297,6 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
 
     override fun indexOf(element: T, start: Int): Int {
         val result = if (element == null) {
-//            Logger.getGlobal().warning("The includes(null) call may return an inaccurate result.Use indexOf(null) instead.")
-//            execute(
-//                "{" +
-//                        "let __tmp=this.$INDEX_OF(null, $start);" +
-//                        "__tmp!=-1?__tmp:this.$INDEX_OF($UNDEFINED, $start);" +
-//                        "}"
-//            )
             indexOfAny(element, start)
         } else {
             invoke(INDEX_OF, element, start)
@@ -352,14 +326,6 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
 
     override fun lastIndexOf(element: T, start: Int): Int {
         val result = if (element == null) {
-//            Logger.getGlobal().warning("The lastIndexOf(null) call may return an inaccurate result.Use lastIndexOf(null) instead.")
-//            execute(
-//                "" +
-//                        "{" +
-//                        "let __tmp=this.$LAST_INDEX_OF(null, $start);" +
-//                        "__tmp!=-1?__tmp:this.$LAST_INDEX_OF($UNDEFINED, $start);" +
-//                        "}"
-//            )
             lastIndexOfAny(element, start)
         } else {
             invoke(LAST_INDEX_OF, element, start)
@@ -511,35 +477,6 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
         throw JsArrayExecutionError("failed to invoke $SOME() function.")
     }
 
-    // FIXME: 解决将initialValue的值传递到js代码的问题，$initialValue的方法被证明是错误的
-//    override fun reduce(initialValue: T?, callback: JsArrayIteratorCallback<T?, T?>): T? {
-//        return this.with("__reduce_cb__", callback) { callback_ ->
-//            // BugFix #1
-//            execute(
-//                "{" +
-//                        "let __tmp=this.$REDUCE((total, item, index, arr)=>{ " +
-//                        "return $callback_(${undefine2Null("item")}, index, ${undefine2Null("total")}, arr) }, $initialValue);" +
-//                        "__tmp==$UNDEFINED?null:__tmp;" +
-//                        "}"
-//            )
-//        }?.let {
-//            it as T
-//        }
-//    }
-    // FIXME: 解决将initialValue的值传递到js代码的问题，$initialValue的方法被证明是错误的
-//    override fun reduceAny(initialValue: Any?, callback: JsArrayIteratorCallback<Any?, Any?>): Any? {
-//        return this.with("__reduce_cb__", callback) { callback_ ->
-//            // BugFix #1
-//            execute(
-//                "{" +
-//                        "let __tmp=this.$REDUCE((total, item, index, arr)=>{ " +
-//                        "return $callback_(${undefine2Null("item")}, index, ${undefine2Null("total")}, arr) }, $initialValue);" +
-//                        "__tmp==$UNDEFINED?null:__tmp;" +
-//                        "}"
-//            )
-//        }
-//    }
-
     override fun reduce(callback: JsArrayIteratorCallback<T?, T?>): T? {
         return this.with("__reduce_cb__", callback) { callback_ ->
             // BugFix #1
@@ -567,35 +504,6 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
             )
         }
     }
-
-    // FIXME: 解决将initialValue的值传递到js代码的问题，$initialValue的方法被证明是错误的
-//    override fun reduceRight(initialValue: T?, callback: JsArrayIteratorCallback<T?, T?>): T? {
-//        return this.with("__reduce_cb__", callback) { callback_ ->
-//            // BugFix #1
-//            execute(
-//                "{" +
-//                        "let __tmp=this.${REDUCE_RIGHT}((total, item, index, arr)=>{ " +
-//                        "return $callback_(${undefine2Null("item")}, index, ${undefine2Null("total")}, arr) }, $initialValue);" +
-//                        "__tmp==$UNDEFINED?null:__tmp;" +
-//                        "}"
-//            )
-//        }?.let {
-//            it as T
-//        }
-//    }
-    // FIXME: 解决将initialValue的值传递到js代码的问题，$initialValue的方法被证明是错误的
-//    override fun reduceRightAny(initialValue: Any?, callback: UntypedIteratorCallback<Any?>): Any? {
-//        return this.with("__reduce_cb__", callback) { callback_ ->
-//            // BugFix #1
-//            execute(
-//                "{" +
-//                        "let __tmp=this.${REDUCE_RIGHT}((total, item, index, arr)=>{ " +
-//                        "return $callback_(${undefine2Null("item")}, index, ${undefine2Null("total")}, arr) }, $initialValue);" +
-//                        "__tmp==$UNDEFINED?null:__tmp;" +
-//                        "}"
-//            )
-//        }
-//    }
 
     override fun reduceRight(callback: JsArrayIteratorCallback<T?, T?>): T? {
         return this.with("__reduce_cb__", callback) { callback_ ->
