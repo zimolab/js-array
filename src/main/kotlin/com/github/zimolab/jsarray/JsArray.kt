@@ -84,7 +84,17 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
             return stringArrayOf(raw)
         }
 
+        fun newJsStringArray(env: WebEngine, initialSize: Int = 0): JsArray<String?>? {
+            val raw = newArray(env, initialSize) ?: return null
+            return stringArrayOf(raw)
+        }
+
         fun newJsIntArray(env: JSObject, initialSize: Int = 0): JsArray<Int?>? {
+            val raw = newArray(env, initialSize) ?: return null
+            return intArrayOf(raw)
+        }
+
+        fun newJsIntArray(env: WebEngine, initialSize: Int = 0): JsArray<Int?>? {
             val raw = newArray(env, initialSize) ?: return null
             return intArrayOf(raw)
         }
@@ -94,7 +104,17 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
             return doubleArrayOf(raw)
         }
 
+        fun newJsDoubleArray(env: WebEngine, initialSize: Int = 0): JsArray<Double?>? {
+            val raw = newArray(env, initialSize) ?: return null
+            return doubleArrayOf(raw)
+        }
+
         fun newBooleanArray(env: JSObject, initialSize: Int = 0): JsArray<Boolean?>? {
+            val raw = newArray(env, initialSize) ?: return null
+            return booleanArrayOf(raw)
+        }
+
+        fun newBooleanArray(env: WebEngine, initialSize: Int = 0): JsArray<Boolean?>? {
             val raw = newArray(env, initialSize) ?: return null
             return booleanArrayOf(raw)
         }
@@ -104,7 +124,17 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
             return jsObjectArrayOf(raw)
         }
 
+        fun newJSObjectArray(env: WebEngine, initialSize: Int = 0): JsArray<JSObject?>? {
+            val raw = newArray(env, initialSize) ?: return null
+            return jsObjectArrayOf(raw)
+        }
+
         fun newJsAnyArray(env: JSObject, initialSize: Int = 0): JsArray<Any?>? {
+            val raw = newArray(env, initialSize) ?: return null
+            return anyArrayOf(raw)
+        }
+
+        fun newJsAnyArray(env: WebEngine, initialSize: Int = 0): JsArray<Any?>? {
             val raw = newArray(env, initialSize) ?: return null
             return anyArrayOf(raw)
         }
