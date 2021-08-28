@@ -156,16 +156,146 @@ dependencies {
 }
 ```
 
-1、创建对象（以JsIntArray为例）
 
-```kotlin
 
+### 2、创建（获取）对象（以JsIntArray为例）
+
+```html
+<script>
+    var int_array = [1,2,3,5,6,7,9]
+</script>
 ```
 
-### 2、调用接口
+```kotlin
+val rawObject = engine.executeScript("int_array")
+val intJsArray = JsArray.intArrayOf(rawObject as JSObject)
+```
+
+### 3、调用接口
 
 ```kotlin
-
+intJsArray.toString()
 ```
+```
+Output
+[1,2,3,5,6,7,9]
+```
+---
+
+```kotlin
+intJsArray.join(";")
+```
+```
+Output
+1;2;3;5;6;7;9
+```
+---
+
+```kotlin
+val intJsArray2 = JsArray.newJsIntArray(rawObject, 10)
+intJsArray2?.fill(10)
+it.println("intArray2: $intJsArray2")
+intJsArray2?.concat(intJsArray)
+```
+```
+Output
+intArray2: [10,10,10,10,10,10,10,10,10,10]
+[10,10,10,10,10,10,10,10,10,10,1,2,3,5,6,7,9]
+```
+---
+
+```kotlin
+val a = intJsArray.reverse()
+print("a:$a")
+print("intJsArray: $intJsArray")
+print("a==intJsArray: ${a == intJsArray}")
+```
+```
+Output
+a:[9,7,6,5,3,2,1]
+intJsArray: [9,7,6,5,3,2,1]
+a==intJsArray: true
+```
+---
+
+```kotlin
+intJsArray.pop()
+print("intJsArray: $intJsArray")
+```
+```
+Output
+intJsArray: [9,7,6,5,3,2]
+```
+---
+
+```kotlin
+intJsArray.push(-1, -2, -3)
+println("intJsArray: $intJsArray")
+```
+```
+Output
+intJsArray: [9,7,6,5,3,2,-1,-2,-3]
+```
+---
+
+```kotlin
+intJsArray.shift()
+print("intJsArray: $intJsArray")
+```
+```
+Output
+intJsArray: [7,6,5,3,2,-1,-2,-3]
+```
+---
+
+```kotlin
+val data = (0..10).map { (random() * 10).toInt() }
+print("data: $data")
+intJsArray.unshift(*data.toTypedArray())
+print("intJsArray: $intJsArray")
+```
+```
+Output
+data: [8, 0, 4, 9, 2, 3, 5, 4, 8, 3, 6]
+intJsArray: [8,0,4,9,2,3,5,4,8,3,6,7,6,5,3,2,-1,-2,-3]
+```
+---
+
+```kotlin
+val ret = intJsArray.slice(2)
+print("ret: $ret")
+println("intJsArray: $intJsArray")
+```
+```
+Output
+ret: [4,9,2,3,5,4,8,3,6,7,6,5,3,2,-1,-2,-3]
+intJsArray: [8,0,4,9,2,3,5,4,8,3,6,7,6,5,3,2,-1,-2,-3]
+```
+---
+
+```kotlin
+val ret = intJsArray.splice(2, 5)
+print("ret: $ret")
+print("intJsArray: $intJsArray")
+```
+```
+Output
+ret: [4,9,2,3,5]
+intJsArray: [8,0,4,8,3,6,7,6,5,3,2,-1,-2,-3]
+```
+---
+
+```kotlin
+print("intJsArray: $intJsArray")
+intJsArray.includes(0)
+```
+```
+Output
+intJsArray: [8,0,4,8,3,6,7,6,5,3,2,-1,-2,-3]
+true
+```
+---
+
 
 **注意：** 以上代码代码仅仅演示API的基本使用方法，实际可运行的完整例子在[**js-array-demo**](https://github.com/zimolab/js-array-demo) 仓库中可以找到。
+
