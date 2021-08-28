@@ -185,6 +185,7 @@ intJsArray[0] = 1
 intJsArray.toString()
 ```
 > **Output**
+>
 > [1,2,3,5,6,7,9]
 
 
@@ -192,6 +193,7 @@ intJsArray.toString()
 intJsArray.join(";")
 ```
 > **Output**
+>
 > 1;2;3;5;6;7;9
 
 ```kotlin
@@ -201,7 +203,9 @@ it.println("intArray2: $intJsArray2")
 intJsArray2?.concat(intJsArray)
 ```
 > **Output**
+>
 > intArray2: [10,10,10,10,10,10,10,10,10,10]
+>
 > [10,10,10,10,10,10,10,10,10,10,1,2,3,5,6,7,9]
 
 ```kotlin
@@ -212,8 +216,11 @@ print("a==intJsArray: ${a == intJsArray}")
 ```
 
 > **Output**
+>
 > a:[9,7,6,5,3,2,1]
+>
 > intJsArray: [9,7,6,5,3,2,1]
+>
 > a==intJsArray: true
 
 ```kotlin
@@ -221,6 +228,7 @@ intJsArray.pop()
 print("intJsArray: $intJsArray")
 ```
 > **Output**
+>
 > intJsArray: [9,7,6,5,3,2]
 
 
@@ -229,6 +237,7 @@ intJsArray.push(-1, -2, -3)
 println("intJsArray: $intJsArray")
 ```
 > **Output**
+>
 > intJsArray: [9,7,6,5,3,2,-1,-2,-3]
 
 ```kotlin
@@ -236,6 +245,7 @@ intJsArray.shift()
 print("intJsArray: $intJsArray")
 ```
 > **Output**
+>
 > intJsArray: [7,6,5,3,2,-1,-2,-3]
 
 ```kotlin
@@ -245,7 +255,9 @@ intJsArray.unshift(*data.toTypedArray())
 print("intJsArray: $intJsArray")
 ```
 > **Output**
+>
 > data: [8, 0, 4, 9, 2, 3, 5, 4, 8, 3, 6]
+>
 > intJsArray: [8,0,4,9,2,3,5,4,8,3,6,7,6,5,3,2,-1,-2,-3]
 
 ```kotlin
@@ -254,7 +266,9 @@ print("ret: $ret")
 println("intJsArray: $intJsArray")
 ```
 > **Output**
+>
 > ret: [4,9,2,3,5,4,8,3,6,7,6,5,3,2,-1,-2,-3]
+>
 > intJsArray: [8,0,4,9,2,3,5,4,8,3,6,7,6,5,3,2,-1,-2,-3]
 
 ```kotlin
@@ -263,7 +277,9 @@ print("ret: $ret")
 print("intJsArray: $intJsArray")
 ```
 > **Output**
+>
 > ret: [4,9,2,3,5]
+>
 > intJsArray: [8,0,4,8,3,6,7,6,5,3,2,-1,-2,-3]
 
 ```kotlin
@@ -271,7 +287,9 @@ print("intJsArray: $intJsArray")
 intJsArray.includes(0)
 ```
 > **Output**
+>
 > intJsArray: [8,0,4,8,3,6,7,6,5,3,2,-1,-2,-3]
+>
 > true
 
 
@@ -289,12 +307,19 @@ jsArray.forEach(object : TypedIteratorCallback<Int?, Unit>{
 ```
 
 > **Output**
+>
 > index: 0, value: 1
+>
 > index: 1, value: 2
+>
 > index: 2, value: 3
+>
 > index: 3, value: 5
+>
 > index: 4, value: 6
+>
 > index: 5, value: 7
+>
 > index: 6, value: 9
 
 
@@ -307,12 +332,19 @@ jsArray.forEach { index, value ->
 }
 ```
 > **Output**
+>
 > index: 0, value: 1
+>
 > index: 1, value: 2
+>
 > index: 2, value: 3
+>
 > index: 3, value: 5
+>
 > index: 4, value: 6
+>
 > index: 5, value: 7
+>
 > index: 6, value: 9
 
 
@@ -376,31 +408,57 @@ anyJsArray.forEach { index, value ->
 
 >  **Output**
 >
-> index: 0, value: 1 (type: class kotlin.Int)
+>  
 >
-> index: 1, value: 2 (type: class kotlin.Int)
+>  index: 0, value: 1 (type: class kotlin.Int)
 >
-> index: 2, value: 3 (type: class kotlin.Int)
+>  
 >
-> index: 3, value: a (type: class kotlin.String)
+>  index: 1, value: 2 (type: class kotlin.Int)
 >
-> index: 4, value: b (type: class kotlin.String)
+>  
 >
-> index: 5, value: c (type: class kotlin.String)
+>  index: 2, value: 3 (type: class kotlin.Int)
 >
-> index: 6, value: null (type: null)
+>  
 >
-> index: 7, value: null (type: null)
+>  index: 3, value: a (type: class kotlin.String)
 >
-> index: 8, value: Sat Aug 28 2021 23:13:24 GMT+0800 (中国标准时间) (type: class com.sun.webkit.dom.JSObject)
+>  
 >
-> index: 9, value: [object Object] (type: class com.sun.webkit.dom.JSObject)
+>  index: 4, value: b (type: class kotlin.String)
 >
-> index: 10, value: 12.3 (type: class kotlin.Double)
+>  
 >
-> index: 11, value: true (type: class kotlin.Boolean)
+>  index: 5, value: c (type: class kotlin.String)
 >
-> index: 12, value: false (type: class kotlin.Boolean)
+>  
+>
+>  index: 6, value: null (type: null)
+>
+>  
+>
+>  index: 7, value: null (type: null)
+>
+>  
+>
+>  index: 8, value: Sat Aug 28 2021 23:13:24 GMT+0800 (中国标准时间) (type: class com.sun.webkit.dom.JSObject)
+>
+>  
+>
+>  index: 9, value: [object Object] (type: class com.sun.webkit.dom.JSObject)
+>
+>  
+>
+>  index: 10, value: 12.3 (type: class kotlin.Double)
+>
+>  
+>
+>  index: 11, value: true (type: class kotlin.Boolean)
+>
+>  
+>
+>  index: 12, value: false (type: class kotlin.Boolean)
 
  对于第一种情形，虽然也可以使用JsArray<Any?>将类型做模糊化处理。但存在另外一种可行的方案：依旧使用类型受限的数组对象。不过，需要留意那些能够引发类型转换异常的地方，注意api的选择和使用。
 
@@ -449,29 +507,53 @@ intJsArray.forEach(object : JsArrayIteratorCallback<Int?, Unit>{
 
 > **Output**
 >
+> 
+>
 > index: 0, value: 1
 >
+> 
+>
 > index: 1, value: 2
+>
+> 
 >
 > index: 2, value: 3
 >
 > index: 3, value: null
 >
+> 
+>
 > index: 4, value: null
+>
+> 
 >
 > index: 5, value: null
 >
+> 
+>
 > index: 6, value: null
+>
+> 
 >
 > index: 7, value: null
 >
+> 
+>
 > index: 8, value: null
+>
+> 
 >
 > index: 9, value: null
 >
+> 
+>
 > index: 10, value: null
 >
+> 
+>
 > index: 11, value: null
+>
+> 
 >
 > index: 12, value: null
 
@@ -493,33 +575,59 @@ intJsArray.forEach(object : JsArrayIteratorCallback<Int?, Unit>{
 
 > **Output**
 >
+> 
+>
 > index: 0, value: 1, class kotlin.Int
+>
+> 
 >
 > index: 1, value: 2, class kotlin.Int
 >
+> 
+>
 > index: 2, value: 3, class kotlin.Int
+>
+> 
 >
 > index: 3, value: a, class kotlin.String
 >
+> 
+>
 > index: 4, value: b, class kotlin.String
+>
+> 
 >
 > index: 5, value: c, class kotlin.String
 >
+> 
+>
 > index: 6, value: null, null
+>
+> 
 >
 > index: 7, value: null, null
 >
+> 
+>
 > index: 8, value: Sun Aug 29 2021 00:19:29 GMT+0800 (中国标准时间), class com.sun.webkit.dom.JSObject
+>
+> 
 >
 > index: 9, value: [object Object], class com.sun.webkit.dom.JSObject
 >
+> 
+>
 > index: 10, value: 12.3, class kotlin.Double
+>
+> 
 >
 > index: 11, value: true, class kotlin.Boolean
 >
+> 
+>
 > index: 12, value: false, class kotlin.Boolean
 
-  除了，上面演示的forEach()接口，其他接受JsArrayIteratorCallback<T, R>类型callback的接口大多数都实现了类似的逻辑，或者是提供了Any版本的接口，可以按照实际情况进行选择。
+  除了，上面演示的forEach()函数，其他接受JsArrayIteratorCallback<T, R>类型callback的迭代函数大多数都实现了类似的逻辑，或者是提供了Any版本的接口，可以按照实际情况进行选择。
 
 **注意：** 以上代码代码仅仅演示API的基本使用方法，实际可运行的完整例子在[**js-array-demo**](https://github.com/zimolab/js-array-demo) 仓库中可以找到。
 
