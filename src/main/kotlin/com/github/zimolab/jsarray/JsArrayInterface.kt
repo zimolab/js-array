@@ -69,4 +69,5 @@ interface JsArrayInterface<T> {
     fun includesAny(element: Any?, start: Int=0): Boolean
     fun indexOfAny(element: Any?, start: Int=0): Int
     fun lastIndexOfAny(element: Any?, start: Int=-1): Int
+    fun forEachAny(callback: UntypedIteratorCallback<Unit>)
 }

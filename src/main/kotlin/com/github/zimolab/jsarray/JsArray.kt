@@ -383,17 +383,12 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
             else -> throw JsArrayExecutionError("failed to invoke $LAST_INDEX_OF() function.")
         }    }
 
-    // BugFix #1
-    private fun undefine2Null(name: String): String {
-        return "${name}==$UNDEFINED?null:$name"
-    }
-
     override fun find(callback: JsArrayIteratorCallback<T?, Boolean>): T? {
         return with("__find_cb__", callback) { callback_: String ->
             // BugFix #1
             execute(
                 "{" +
-                        "let __tmp = this.$FIND((item, index, arr)=>{ return $callback_(${undefine2Null("item")}, index, null, arr); });" +
+                        "let __tmp = this.$FIND((item, index, arr)=>{ return $callback_(${u2n("item")}, index, null, arr); });" +
                         "__tmp==$UNDEFINED?null:__tmp;" +
                         "}"
             )
@@ -407,7 +402,7 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
             // BugFix #1
             execute(
                 "{" +
-                        "let __tmp = this.$FIND((item, index, arr)=>{ return $callback_(${undefine2Null("item")}, index, null, arr); });" +
+                        "let __tmp = this.$FIND((item, index, arr)=>{ return $callback_(${u2n("item")}, index, null, arr); });" +
                         "__tmp==$UNDEFINED?null:__tmp;" +
                         "}"
             )
@@ -417,7 +412,7 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
     override fun findIndex(callback: JsArrayIteratorCallback<T?, Boolean>): Int {
         val result = with("__find_index_cb__", callback) { callback_ ->
             // BugFix #1
-            execute("this.$FIND_INDEX((item, index, arr)=>{ return $callback_(${undefine2Null("item")}, index, null, arr); })")
+            execute("this.$FIND_INDEX((item, index, arr)=>{ return $callback_(${u2n("item")}, index, null, arr); })")
         }
         if (result is Int)
             return result
@@ -431,7 +426,7 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
             execute(
                 "" +
                         "for(let i=${startIndex}; i < ${stop}; i = i + $step){" +
-                        "   let _continue=$callback_(${undefine2Null("this[i]")}, i, null, this);" +
+                        "   let _continue=$callback_(${u2n("this[i]")}, i, null, this);" +
                         "   if(!_continue) " +
                         "       break;" +
                         "}"
@@ -439,18 +434,24 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
         }
     }
 
-
     override fun forEach(callback: JsArrayIteratorCallback<T?, Unit>) {
         this.with("__forEach_cb__", callback) { callback_ ->
             // BugFix #1
-            execute("this.$FOR_EACH((item, index, arr)=>{ $callback_(${undefine2Null("item")}, index, null, arr); })")
+            execute("this.$FOR_EACH((item, index, arr)=>{ $callback_(${u2n("item")}, index, null, arr); })")
+        }
+    }
+
+    override fun forEachAny(callback: UntypedIteratorCallback<Unit>) {
+        this.with("__forEach_cb__", callback) { callback_ ->
+            // BugFix #1
+            execute("this.$FOR_EACH((item, index, arr)=>{ $callback_(${u2n("item")}, index, null, arr); })")
         }
     }
 
     override fun filter(callback: JsArrayIteratorCallback<T?, Boolean>): JsArrayInterface<T> {
         val result = this.with("__filter_cb__", callback) { callback_ ->
             // BugFix #1
-            execute("this.$FILTER((item, index, arr)=>{ return $callback_(${undefine2Null("item")}, index, null, arr); })")
+            execute("this.$FILTER((item, index, arr)=>{ return $callback_(${u2n("item")}, index, null, arr); })")
         }
         if (result is JSObject)
             return JsArray(result)
@@ -460,7 +461,7 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
     override fun filterAny(callback: UntypedIteratorCallback<Boolean>): JsArrayInterface<Any?> {
         val result = this.with("__filter_cb__", callback) { callback_ ->
             // BugFix #1
-            execute("this.$FILTER((item, index, arr)=>{ return $callback_(${undefine2Null("item")}, index, null, arr); })")
+            execute("this.$FILTER((item, index, arr)=>{ return $callback_(${u2n("item")}, index, null, arr); })")
         }
         if (result is JSObject)
             return JsArray(result)
@@ -470,7 +471,7 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
     override fun map(callback: JsArrayIteratorCallback<T?, T?>): JsArrayInterface<T> {
         val result = this.with("__map_cb__", callback) { callback_ ->
             // BugFix #1
-            execute("this.$MAP((item, index, arr)=>{ return $callback_(${undefine2Null("item")}, index, null, arr); })")
+            execute("this.$MAP((item, index, arr)=>{ return $callback_(${u2n("item")}, index, null, arr); })")
         }
         if (result is JSObject)
             return JsArray(result)
@@ -480,7 +481,7 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
     override fun mapAny(callback: UntypedIteratorCallback<Any?>): JsArrayInterface<Any?> {
         val result = this.with("__map_cb__", callback) { callback_ ->
             // BugFix #1
-            execute("this.$MAP((item, index, arr)=>{ return $callback_(${undefine2Null("item")}, index, null, arr); })")
+            execute("this.$MAP((item, index, arr)=>{ return $callback_(${u2n("item")}, index, null, arr); })")
         }
         if (result is JSObject)
             return JsArray(result)
@@ -490,7 +491,7 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
     override fun every(callback: JsArrayIteratorCallback<T?, Boolean>): Boolean {
         val result = this.with("__every_cb__", callback) { callback_ ->
             // BugFix #1
-            execute("this.$EVERY((item, index, arr)=>{ return $callback_(${undefine2Null("item")}, index, null, arr); })")
+            execute("this.$EVERY((item, index, arr)=>{ return $callback_(${u2n("item")}, index, null, arr); })")
         }
         if (result is Boolean)
             return result
@@ -500,7 +501,7 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
     override fun some(callback: JsArrayIteratorCallback<T?, Boolean>): Boolean {
         val result = this.with("__some_cb__", callback) { callback_ ->
             // BugFix #1
-            execute("this.$SOME((item, index, arr)=>{ return $callback_(${undefine2Null("item")}, index, null, arr); })")
+            execute("this.$SOME((item, index, arr)=>{ return $callback_(${u2n("item")}, index, null, arr); })")
         }
         if (result is Boolean)
             return result
@@ -513,7 +514,7 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
             execute(
                 "{" +
                         "let __tmp=this.$REDUCE((total, item, index, arr)=>{ " +
-                        "return $callback_(${undefine2Null("item")}, index, ${undefine2Null("total")}, arr) });" +
+                        "return $callback_(${u2n("item")}, index, ${u2n("total")}, arr) });" +
                         "__tmp==$UNDEFINED?null:__tmp;" +
                         "}"
             )
@@ -528,7 +529,7 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
             execute(
                 "{" +
                         "let __tmp=this.$REDUCE((total, item, index, arr)=>{ " +
-                        "return $callback_(${undefine2Null("item")}, index, ${undefine2Null("total")}, arr) });" +
+                        "return $callback_(${u2n("item")}, index, ${u2n("total")}, arr) });" +
                         "__tmp==$UNDEFINED?null:__tmp;" +
                         "}"
             )
@@ -541,7 +542,7 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
             execute(
                 "{" +
                         "let __tmp=this.$REDUCE_RIGHT((total, item, index, arr)=>{ " +
-                        "return $callback_(${undefine2Null("item")}, index, ${undefine2Null("total")}, arr) });" +
+                        "return $callback_(${u2n("item")}, index, ${u2n("total")}, arr) });" +
                         "__tmp==$UNDEFINED?null:__tmp;" +
                         "}"
             )
@@ -556,7 +557,7 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
             execute(
                 "{" +
                         "let __tmp=this.$REDUCE_RIGHT((total, item, index, arr)=>{ " +
-                        "return $callback_(${undefine2Null("item")}, index, ${undefine2Null("total")}, arr) });" +
+                        "return $callback_(${u2n("item")}, index, ${u2n("total")}, arr) });" +
                         "__tmp==$UNDEFINED?null:__tmp;" +
                         "}"
             )
@@ -570,8 +571,8 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
             this.with("__sort_cb__", sortFunction) { sortFunc_ ->
                 // BugFix #1
                 execute("this.$SORT((a, b)=>{" +
-                        "a=${undefine2Null("a")};" +
-                        "b=${undefine2Null("b")};" +
+                        "a=${u2n("a")};" +
+                        "b=${u2n("b")};" +
                         "return $sortFunc_(a, b); " +
                         "});")
             }
@@ -583,6 +584,12 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
 
     override fun toJsAnyArray(): JsArrayInterface<Any?> {
         return JsArray(this.reference)
+    }
+
+    // BugFix #1
+    // undefined to null
+    private fun u2n(name: String): String {
+        return "${name}==$UNDEFINED?null:$name"
     }
 
     // 扩展API（基于核心API）
@@ -626,6 +633,13 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
 
     inline fun forEach(crossinline callback: UntypedCallback2<Unit>) =
         this.forEach(object : UntypedIteratorCallback<Unit> {
+            override fun call(currentValue: Any?, index: Int, total: Any?, arr: Any?) {
+                callback(index to currentValue)
+            }
+        })
+
+    inline fun forEachAny(crossinline callback: UntypedCallback2<Unit>) =
+        this.forEachAny(object : UntypedIteratorCallback<Unit>{
             override fun call(currentValue: Any?, index: Int, total: Any?, arr: Any?) {
                 callback(index to currentValue)
             }
