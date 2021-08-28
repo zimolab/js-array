@@ -477,13 +477,15 @@ val a = intJsArray[3]
 >
 > java.lang.ClassCastException: class java.lang.String cannot be cast to class java.lang.Integer (java.lang.String and java.lang.Integer are in module java.base of loader 'bootstrap')
 
-  针对这种情况，JsArray中特别设计了一些**Any版本的接口（以Any为尾缀的函数）**，当我们拿不准某个元素是否为其他类型时，使用这些接口可以很大程度避免上述异常。不难看出，这些Any版的接口，事实上就是将JsArray<Any?>中的部分逻辑推广到类型限定的情形下。
-
-  上述例子可以改为使用getAny()接口：
+  针对这种情况，JsArray中特别设计了一些**Any版本的接口（以Any为尾缀的函数）**。例如，上述例子可以改为使用getAny()接口：
 
 ```kotlin
 val a = intJsArray.getAny(3)
 ```
+
+  当我们拿不准某个元素是否为其他类型时，使用这些接口可以很大程度避免上述异常。不难看出，这些Any版的接口，本质上就是将部分JsArray<Any?>中的逻辑推广到类型限定的情形下。
+
+  
 
   又比如，下面这种情况也将引发同样的异常：
 
@@ -493,7 +495,7 @@ intJsArray.forEach { index, value ->
 }
 ```
 
-   但是我们发现，并没有一个名为forEachAny()的方法。这是因为在设计迭代回调器时已经将这种情况做了处理，无需增加另外的接口。这时我们可以采用以下的方法：
+   但是我们发现，并没有一个名为forEachAny()的方法。这是因为在设计迭代回调机制时已经将这种情况做了处理，无需增加另外的接口。这时我们可以采用以下的方法：
 
 ```kotlin
 intJsArray.forEach(object : JsArrayIteratorCallback<Int?, Unit>{
