@@ -201,14 +201,14 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
         return result
     }
 
-    override fun concat(other: JsArrayInterface<T>): JsArrayInterface<T> {
+    override fun concat(other: JsArrayInterface<T>): JsArray<T> {
         val result = invoke(CONCAT, other.reference)
         if (result is JSObject)
             return JsArray(result)
         throw JsArrayExecutionError("failed to invoke $CONCAT() function.")
     }
 
-    override fun concatAny(other: JsArrayInterface<T>): JsArrayInterface<Any?> {
+    override fun concatAny(other: JsArrayInterface<T>): JsArray<Any?> {
         val result = invoke(CONCAT, other.reference)
         if (result is JSObject)
             return JsArray(result)
@@ -222,7 +222,7 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
         throw JsArrayExecutionError("failed to invoke $JOIN() function.")
     }
 
-    override fun reverse(): JsArrayInterface<T> {
+    override fun reverse(): JsArray<T> {
         return if (invoke(REVERSE) is JSObject) {
             this
         } else {
@@ -270,7 +270,7 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
         }
     }
 
-    override fun slice(start: Int, end: Int?): JsArrayInterface<T> {
+    override fun slice(start: Int, end: Int?): JsArray<T> {
         val result = if (end == null) {
             invoke(SLICE, start)
         } else {
@@ -281,14 +281,14 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
         throw JsArrayExecutionError("failed to invoke $SLICE() function.")
     }
 
-    override fun splice(index: Int, count: Int, vararg items: T?): JsArrayInterface<T> {
+    override fun splice(index: Int, count: Int, vararg items: T?): JsArray<T> {
         return when (val result = invoke(SPLICE, index, count, *items)) {
             is JSObject -> JsArray(result)
             else -> throw JsArrayExecutionError("failed to invoke $SPLICE() function.")
         }
     }
 
-    override fun fill(value: T?, start: Int, end: Int?): JsArrayInterface<T> {
+    override fun fill(value: T?, start: Int, end: Int?): JsArray<T> {
         val result = if (end == null) {
             invoke(FILL, value, start)
         } else {
@@ -441,7 +441,7 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
         }
     }
 
-    override fun filter(callback: JsArrayIteratorCallback<T?, Boolean>): JsArrayInterface<T> {
+    override fun filter(callback: JsArrayIteratorCallback<T?, Boolean>): JsArray<T> {
         val result = this.with("__filter_cb__", callback) { callback_ ->
             // BugFix #1
             execute("this.$FILTER((item, index, arr)=>{ return $callback_(${u2n("item")}, index, null, arr); })")
@@ -461,7 +461,7 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
         throw JsArrayExecutionError("failed to invoke $FILTER() function.")
     }
 
-    override fun map(callback: JsArrayIteratorCallback<T?, T?>): JsArrayInterface<T> {
+    override fun map(callback: JsArrayIteratorCallback<T?, T?>): JsArray<T> {
         val result = this.with("__map_cb__", callback) { callback_ ->
             // BugFix #1
             execute("this.$MAP((item, index, arr)=>{ return $callback_(${u2n("item")}, index, null, arr); })")
@@ -557,7 +557,7 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
         }
     }
 
-    override fun sort(sortFunction: JsArraySortFunction<T?>?): JsArrayInterface<T> {
+    override fun sort(sortFunction: JsArraySortFunction<T?>?): JsArray<T> {
         val result = if (sortFunction == null)
             invoke(SORT)
         else {
