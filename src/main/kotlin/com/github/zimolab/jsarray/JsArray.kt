@@ -190,7 +190,7 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
 
     override operator fun get(index: Int): T? {
         return getAny(index)?.let {
-            it as T
+            it as? T
         }
     }
 
@@ -232,7 +232,7 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
 
     override fun pop(): T? {
         return popAny()?.let {
-            it as T
+            it as? T
         }
     }
 
@@ -252,7 +252,7 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
 
     override fun shift(): T? {
         return shiftAny()?.let {
-            it as T
+            it as? T
         }
     }
 
@@ -393,7 +393,7 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
                         "}"
             )
         }?.let {
-            it as T
+            it as? T
         }
     }
 
@@ -512,7 +512,7 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
                         "}"
             )
         }?.let {
-            it as T
+            it as? T
         }
     }
 
@@ -540,7 +540,7 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
                         "}"
             )
         }?.let {
-            it as T
+            it as? T
         }
     }
 
@@ -631,6 +631,7 @@ private constructor(override val reference: JSObject) : JsArrayInterface<T> {
             }
         })
 
+    // FIXME 引发类型转换异常
     inline fun find(crossinline callback: TypedCallback2<T, Boolean>) =
         this.find(object : TypedIteratorCallback<T?, Boolean> {
             override fun call(currentValue: T?, index: Int, total: T?, arr: Any?): Boolean {

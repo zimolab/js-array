@@ -37,6 +37,7 @@ interface JsArrayInterface<T> {
     fun slice(start: Int, end: Int? = null): JsArrayInterface<T>
     fun splice(index: Int, count: Int, vararg items: T?): JsArrayInterface<T>
     fun fill(value: T?, start: Int = 0, end: Int? = null): JsArrayInterface<T>
+
     fun find(callback: JsArrayIteratorCallback<T?, Boolean>): T?
     fun findIndex(callback: JsArrayIteratorCallback<T?, Boolean>): Int
     fun includes(element: T, start: Int = 0): Boolean
